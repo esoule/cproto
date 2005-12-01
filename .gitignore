@@ -1,0 +1,59 @@
+# Backup files
+*~
+*.old
+*.bak
+*.log
+*.org
+*.orig
+*.rej
+*.tmp
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+core
+.nfs*
+
+/config.log
+/config.cache
+/config.h
+/config.status
+/default.h
+/cproto
+/Makefile
+/lex.yy.c
+/y.tab.c
+/.version
+/.fname
+
+/testing/*.dcl
+/testing/*.err
+/testing/case*.c
+/testing/case*.bat
