@@ -1,0 +1,320 @@
+/* LINTLIBRARY */
+
+/* case14.c */
+
+int	x3;
+
+typedef int x4t;
+
+char	x6;
+short	x7;
+int	x8;
+long	x9;
+float	x10;
+double	x11;
+signed	x12;
+unsigned x13;
+
+struct x14;
+
+union x15;
+
+enum x16;
+
+x4t;
+
+x4t	x17;
+const	x18 = {0};
+volatile x19;
+
+typedef struct _first {
+        int a:5;
+        struct {
+                int a,b;
+        } b_struct;
+        char b:16, b1:1; 
+        long c:16, c1;
+        short d:16, d1:8, d2;
+        unsigned e:16;
+        float f;
+        double g;
+        struct _first *link;
+        } _FIRST;
+
+typedef int badStyle;
+
+void	badFunc(badStyle)
+		int	*badStyle;
+		{ /* void */ }
+
+_FIRST	first;
+_FIRST	last;
+_FIRST	first_last[];
+struct _second {
+                enum {true, false} bool;
+                enum {wrong=1, right=3} values;
+        } _SECOND;
+int	i[];
+float	f[];
+int	array[][10][20];
+
+int	dots_0(p1)
+		int	p1;
+		{ return(*(int *)0); }
+
+	/* VARARGS1 */
+int	dots_1(p1)
+		int	p1;
+		{ return(*(int *)0); }
+
+	/* VARARGS2 */
+int	dots_3(p1, p2)
+		int	p1;
+		char	p2;
+		{ return(*(int *)0); }
+
+int	dots_4(p1, p2, p3)
+		int	p1;
+		char	p2;
+		char	*p3;
+		{ return(*(int *)0); }
+
+	/* VARARGS3 */
+char	*dots_5(p1, p2, p3)
+		int	p1;
+		char	p2;
+		char	*p3;
+		{ return(*(char **)0); }
+
+_FIRST	*xdots_0(p1)
+		int	p1;
+		{ return(*(_FIRST **)0); }
+
+	/* VARARGS1 */
+char	*xdots_1(p1)
+		int	p1;
+		{ return(*(char **)0); }
+
+	/* VARARGS2 */
+int	xdots_3(p1, p2)
+		int	p1;
+		char	p2;
+		{ return(*(int *)0); }
+
+_FIRST	*func1()
+		{ return(*(_FIRST **)0); }
+
+_FIRST	*func2(p1, p2, p)
+		_FIRST	*p1;
+		int	p2[];
+		float	p;
+		{ return(*(_FIRST **)0); }
+
+int	*(func_func)();
+
+float	efunc0(p1, p2, p3)
+		int	p1;
+		int	p2;
+		int	p3;
+		{ return(*(float *)0); }
+
+_FIRST	efunc1(p1, p2, p3)
+		int	p1;
+		float	p2;
+		long	p3;
+		{ return(*(_FIRST *)0); }
+
+typedef int bool;
+
+bool	a1;
+bool	a3;
+
+struct ZIP1 { int x1, y1; };
+
+struct zip2 { int x2, y2; } z2;
+struct { int x3, y3; } z3;
+
+struct ZIP4 { int x4, y4; };
+
+enum zap1 { a,b,c,d } what;
+enum zap2 what2;
+enum {a9,b9,c9,d9} what3;
+
+typedef struct bong {
+        int (*func)();
+        } BONG;
+
+typedef char *string;
+
+int	junk;
+
+void	main(argc, argv)
+		int	argc;
+		char	**argv;
+		{ /* void */ }
+
+	/* VARARGS */
+int	veryfunny(a, b, c)
+		char	*a;
+		long	b;
+		long	c;
+		{ return(*(int *)0); }
+
+	/* VARARGS3 */
+int	program(argv, y, zz, z1, z2, z3)
+		string	argv[];
+		struct alpha { int x,z; } y;
+		int	zz;
+		int	z1;
+		int	z2;
+		int	z3;
+		{ return(*(int *)0); }
+
+void	junk0()
+		{ /* void */ }
+
+int	junk1()
+		{ return(*(int *)0); }
+
+void	junk2()
+		{ /* void */ }
+
+int	junk3()
+		{ return(*(int *)0); }
+
+BONG	*junk4()
+		{ return(*(BONG **)0); }
+
+typedef int extern_junk;
+
+extern_junk *foo()
+		{ return(*(extern_junk **)0); }
+
+typedef int void_junk;
+
+void_junk *foo2a()
+		{ return(*(void_junk **)0); }
+
+void_junk *foo2a()
+		{ return(*(void_junk **)0); }
+
+void_junk *foo2()
+		{ return(*(void_junk **)0); }
+
+void_junk *foo_void(void_int)
+		void_junk void_int;
+		{ return(*(void_junk **)0); }
+
+void	(*sigdisp(sig, func))()
+		int	sig;
+		void	(*func)();
+		{ return(*(void(*)())0); }
+
+void	(*Sigdisp(sig, func))()
+		int	sig;
+		void	(*func)();
+		{ return(*(void(*)())0); }
+
+void	(*sigdisp2(sig, func))()
+		int	sig;
+		void	(*func)();
+		{ return(*(void(*)())0); }
+
+int	(*K_R_INT_ptr(p1, p2))()
+		long	*p1;
+		int	p2;
+		{ return(*(int(*)())0); }
+
+int	(*STD_INT_ptr(p1, p2))()
+		long	*p1;
+		int	p2;
+		{ return(*(int(*)())0); }
+
+void	(*K_R_VOID_ptr(p1, p2))()
+		long	*p1;
+		int	p2;
+		{ return(*(void(*)())0); }
+
+void	(*STD_VOID_ptr(p1, p2))()
+		long	*p1;
+		int	p2;
+		{ return(*(void(*)())0); }
+
+int	*K_R_int_ptr(p1, p2)
+		long	*p1;
+		int	p2;
+		{ return(*(int **)0); }
+
+int	**STD_int2_ptr(p1, p2)
+		long	*p1;
+		int	p2;
+		{ return(*(int ***)0); }
+
+int	*STD_int_ptr(p1, p2)
+		long	*p1;
+		int	p2;
+		{ return(*(int **)0); }
+
+void	*K_R_void_ptr(p1, p2)
+		long	*p1;
+		int	p2;
+		{ return(*(void **)0); }
+
+void	*STD_void_ptr(p1, p2)
+		long	*p1;
+		int	p2;
+		{ return(*(void **)0); }
+
+int	K_R_int_val(p1, p2)
+		long	*p1;
+		int	p2;
+		{ return(*(int *)0); }
+
+int	K_R_int_val2(p1, p2)
+		long	*p1;
+		int	p2;
+		{ return(*(int *)0); }
+
+int	STD_int_val(p1, p2)
+		long	*p1;
+		int	p2;
+		{ return(*(int *)0); }
+
+void	K_R_void_val(p1, p2)
+		long	*p1;
+		int	p2;
+		{ /* void */ }
+
+void	K_R_void_val2(p1, p2)
+		long	*p1;
+		int	p2;
+		{ /* void */ }
+
+void	STD_void_val(p1, p2)
+		long	*p1;
+		int	p2;
+		{ /* void */ }
+
+int	(*XSetAfterFunction(p1, p2))()
+		long	*p1;
+		int	(*p2)();
+		{ return(*(int(*)())0); }
+
+int	XQueryKeymap(p1, p2)
+		long	*p1;
+		char	p2[32];
+		{ return(*(int *)0); }
+
+int	Another(p1, p2)
+		long	*p1;
+		int	(*p2)();
+		{ return(*(int *)0); }
+
+int	GenFunc(p1, p2)
+		int	*p1;
+		int	(*p2());
+		{ return(*(int *)0); }
+
+void	*(*__glob_opendir_hook)();
+const char *(*__glob_readdir_hook)() = {0};
+void	(*__glob_closedir_hook)();

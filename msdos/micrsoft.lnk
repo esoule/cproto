@@ -1,0 +1,12 @@
+CPROTO.OBJ + 
+LINTLIBS.OBJ + 
+GETOPT.OBJ + 
+SEMANTIC.OBJ + 
+STRKEY.OBJ + 
+SYMBOL.OBJ + 
+YTAB.OBJ  +
+POPEN.OBJ 
+cproto.exe 
+cproto.map
+d:\msc60ax\lib\llibce.lib
+;

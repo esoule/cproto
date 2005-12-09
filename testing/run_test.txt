@@ -1,0 +1,25 @@
+$Id: run_test.txt,v 4.5 2004/03/09 23:30:11 tom Exp $
+CASE 01 = unix, vms, dos, os2 =
+CASE 02 = unix, vms, dos, os2 = -f0
+CASE 03 = unix, vms, dos, os2 = -c -f1
+CASE 04 = unix, vms, dos, os2 = -c -f2
+CASE 05 = unix, vms, dos, os2 = -c -f3
+CASE 06 = unix, vms, dos = -c -f3 -v
+CASE 07 = unix, vms, dos = -c -f3 -v -e
+CASE 08 = unix, vms, dos = -c -f3 -v -e -m
+CASE 09 = unix, vms, dos = -c -f3 -v -"Pint\sfunc(\n\ta,\n\tb\n\t)"
+CASE 10 = unix = -"T"
+CASE 11 = unix = -l
+CASE 12 = unix, vms, dos, os2 = -s
+CASE 13 = unix = -l -s
+CASE 14 = unix = -l -x
+CASE 15 = apollo = -D__STDC__ -D__attribute='#attributes' -l apollo.c
+CASE 16 = unix, vms, dos = -a
+CASE 17 = unix, vms, dos = -t
+CASE 18 = unix, vms, dos, os2 = -f1
+CASE 19 = unix, vms, dos, os2 = -f2
+CASE 20 = unix, vms, dos, os2 = -f3
+CASE 21 = unix, vms, dos = -f3 -v -"Pint\sfunc(\n\ta,\n\tb\n\t)"
+CASE 22 = unix = -l -a
+CASE 23 = unix, vms, dos, os2 = -i
+CASE 24 = unix, vms, dos, os2 = -i -s

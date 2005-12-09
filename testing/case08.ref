@@ -1,0 +1,62 @@
+#if __STDC__ || defined(__cplusplus)
+#define P_(s) s
+#else
+#define P_(s) ()
+#endif
+
+/* case08.c */
+extern char x6;
+extern short x7;
+extern int x8;
+extern long x9;
+extern float x10;
+extern double x11;
+extern signed x12;
+extern unsigned x13;
+extern x4t x17;
+extern const x18;
+extern volatile x19;
+extern void badFunc P_((int *badStyle));
+extern _FIRST first;
+extern _FIRST last;
+extern _FIRST first_last[];
+extern struct _second _SECOND;
+extern int i[];
+extern float f[];
+extern int array[][10][20];
+extern int dots_0 P_((int p1));
+extern int dots_1 P_((int p1, ...));
+extern int dots_3 P_((int p1, char p2, ...));
+extern _FIRST *func1 P_((void));
+extern _FIRST *func2 P_((_FIRST *p1, int p2[], float p));
+extern int *(func_func) P_((void));
+extern bool a1;
+extern struct zip2 z2;
+extern struct {} z3;
+extern enum zap1 what;
+extern enum zap2 what2;
+extern enum {} what3;
+extern int main P_((register argc, char **argv));
+extern int veryfunny P_((char *a, long b, long c));
+extern int program P_((string argv[], struct alpha y, int zz, int z1, int z2, int z3));
+extern int junk0 P_((void));
+extern int junk1 P_((void));
+extern int junk2 P_((void));
+extern int junk3 P_((void));
+extern BONG *junk4 P_((void));
+extern extern_junk *foo P_((void));
+extern void_junk *foo2a P_((void));
+extern void_junk *foo2 P_((void));
+extern void_junk *foo_void P_((void_junk void_int));
+extern void (*Sigdisp P_((int sig, void (*func)(int sig)))) P_((int sig1));
+extern void (*sigdisp2 P_((int sig, void (*func)(int sig)))) P_((int sig2));
+extern int (*K_R_INT_ptr P_((long *p1, int p2))) P_((void));
+extern void (*K_R_VOID_ptr P_((long *p1, int p2))) P_((void));
+extern int *K_R_int_ptr P_((long *p1, int p2));
+extern void *K_R_void_ptr P_((long *p1, int p2));
+extern int K_R_int_val P_((long *p1, int p2));
+extern int K_R_int_val2 P_((long *p1, int p2));
+extern void K_R_void_val P_((long *p1, int p2));
+extern int K_R_void_val2 P_((long *p1, int p2));
+
+#undef P_

@@ -1,0 +1,1233 @@
+/* LINTLIBRARY */
+
+/* apollo.c */
+#undef	COMPLETE_SR10_2
+#ifdef	__STDC__
+#ident	Standard LLIB
+#else
+#ident	Traditional LLIB
+
+#include <apollo/base.h>
+
+short	pm_$errout;
+uid_$t	uid_$nil;
+
+void	lib_$init_set(set, size)
+		void	*set;
+		short	size;
+		{ /* void */ }
+
+void	lib_$add_to_set(set, size, element)
+		void	*set;
+		short	size;
+		short	element;
+		{ /* void */ }
+
+void	lib_$clr_from_set(set, size, element)
+		void	*set;
+		short	size;
+		short	element;
+		{ /* void */ }
+
+boolean	lib_$member_of_set(set, size, element)
+		void	*set;
+		short	size;
+		short	element;
+		{ return(*(boolean *)0); }
+
+#include <apollo/aclm.h>
+
+void	aclm_$up()
+		{ /* void */ }
+
+void	aclm_$down()
+		{ /* void */ }
+
+#include <apollo/cal.h>
+
+void	cal_$decode_ascii_time(string, string_length, hour, minute, second, status)
+		char	*string;
+		short	string_length;
+		short	*hour;
+		short	*minute;
+		short	*second;
+		status_$t *status;
+		{ /* void */ }
+
+void	cal_$decode_ascii_date(string, string_length, year, month, day, status)
+		char	*string;
+		short	string_length;
+		short	*year;
+		short	*month;
+		short	*day;
+		status_$t *status;
+		{ /* void */ }
+
+void	cal_$decode_ascii_tzdif(string, string_length, tz_dif, tz_name, status)
+		char	*string;
+		short	string_length;
+		short	*tz_dif;
+		cal_$tz_name_t tz_name;
+		status_$t *status;
+		{ /* void */ }
+
+void	cal_$decode_time(clock, decoded_clock)
+		time_$clock_t clock;
+		cal_$timedate_rec_t *decoded_clock;
+		{ /* void */ }
+
+void	cal_$encode_time(decoded_clock, clock)
+		cal_$timedate_rec_t decoded_clock;
+		time_$clock_t *clock;
+		{ /* void */ }
+
+void	cal_$decode_local_time(decoded_clock)
+		cal_$timedate_rec_t *decoded_clock;
+		{ /* void */ }
+
+cal_$weekday_t cal_$weekday(year, month, day)
+		short	year;
+		short	month;
+		short	day;
+		{ return(*(cal_$weekday_t *)0); }
+
+void	cal_$apply_local_offset(clock)
+		time_$clock_t *clock;
+		{ /* void */ }
+
+void	cal_$remove_local_offset(clock)
+		time_$clock_t *clock;
+		{ /* void */ }
+
+void	cal_$get_local_time(clock)
+		time_$clock_t *clock;
+		{ /* void */ }
+
+void	cal_$write_timezone(timezone_info, status)
+		cal_$timezone_rec_t timezone_info;
+		status_$t *status;
+		{ /* void */ }
+
+void	cal_$sec_to_clock(seconds, clock)
+		unsigned long seconds;
+		time_$clock_t *clock;
+		{ /* void */ }
+
+unsigned long cal_$clock_to_sec(clock)
+		time_$clock_t clock;
+		{ return(*(unsigned long *)0); }
+
+void	cal_$get_info(timezone_info)
+		cal_$timezone_rec_t *timezone_info;
+		{ /* void */ }
+
+void	cal_$float_clock(clock, float_seconds)
+		time_$clock_t clock;
+		double	*float_seconds;
+		{ /* void */ }
+
+void	cal_$add_clock(clock1, clock2)
+		time_$clock_t *clock1;
+		time_$clock_t clock2;
+		{ /* void */ }
+
+boolean	cal_$sub_clock(clock1, clock2)
+		time_$clock_t *clock1;
+		time_$clock_t clock2;
+		{ return(*(boolean *)0); }
+
+short	cal_$cmp_clock(clock1, clock2)
+		time_$clock_t clock1;
+		time_$clock_t clock2;
+		{ return(*(short *)0); }
+
+#include <apollo/error.h>
+
+void	error_$find_text(status, sub_np, sub_nl, mod_np, mod_nl, err_p, err_l)
+		status_$t status;
+		char	**sub_np;
+		short	*sub_nl;
+		char	**mod_np;
+		short	*mod_nl;
+		char	**err_p;
+		short	*err_l;
+		{ /* void */ }
+
+void	error_$get_text(status, sub_n, sub_nl, mod_n, mod_nl, err_t, err_l)
+		status_$t status;
+		error_$string_t sub_n;
+		short	*sub_nl;
+		error_$string_t mod_n;
+		short	*mod_nl;
+		error_$string_t err_t;
+		short	*err_l;
+		{ /* void */ }
+
+void	error_$print(status)
+		status_$t status;
+		{ /* void */ }
+
+void	error_$print_name(status, name, namelen)
+		status_$t status;
+		char	*name;
+		pinteger namelen;
+		{ /* void */ }
+
+	/* VARARGS6 */
+void	error_$print_format(status, strm, prechr, command, commlen, str)
+		status_$t status;
+		stream_$id_t strm;
+		char	prechr;
+		error_$string_t command;
+		short	commlen;
+		char	*str;
+		{ /* void */ }
+
+void	error_$init_std_format(strm, prechr, command, commlen)
+		stream_$id_t strm;
+		char	prechr;
+		char	*command;
+		short	commlen;
+		{ /* void */ }
+
+	/* VARARGS2 */
+void	error_$std_format(status, str)
+		status_$t status;
+		char	*str;
+		{ /* void */ }
+
+boolean	error_$fail(status)
+		status_$t status;
+		{ return(*(boolean *)0); }
+
+short	error_$subsys(status)
+		status_$t status;
+		{ return(*(short *)0); }
+
+short	error_$module(status)
+		status_$t status;
+		{ return(*(short *)0); }
+
+short	error_$code(status)
+		status_$t status;
+		{ return(*(short *)0); }
+
+#include <apollo/ev.h>
+
+boolean	ev_$set_var(name, namelen, value, valuelen)
+		char	*name;
+		short	namelen;
+		char	*value;
+		short	valuelen;
+		{ return(*(boolean *)0); }
+
+boolean	ev_$get_var(name, namelen, value_ptr, valuelen)
+		char	*name;
+		short	namelen;
+		char	**value_ptr;
+		short	*valuelen;
+		{ return(*(boolean *)0); }
+
+boolean	ev_$exist_var(name, namelen)
+		char	*name;
+		short	namelen;
+		{ return(*(boolean *)0); }
+
+boolean	ev_$delete_var(name, namelen)
+		char	*name;
+		short	namelen;
+		{ return(*(boolean *)0); }
+
+boolean	ev_$read_var_entry(ix, name_ptr, namelen, value_ptr, valuelen)
+		short	*ix;
+		char	**name_ptr;
+		short	*namelen;
+		char	**value_ptr;
+		short	*valuelen;
+		{ return(*(boolean *)0); }
+
+#include <apollo/ios.h>
+
+xoid_$t	xoid_$nil;
+
+ios_$id_t ios_$open(n, l, opts, st)
+		char	*n;
+		short	l;
+		ios_$open_options_t opts;
+		status_$t *st;
+		{ return(*(ios_$id_t *)0); }
+
+void	ios_$create(name, name_len, type_uid, cmode, oopts, id, status)
+		char	*name;
+		short	name_len;
+		uid_$t	type_uid;
+		ios_$create_mode_t cmode;
+		ios_$open_options_t oopts;
+		ios_$id_t *id;
+		status_$t *status;
+		{ /* void */ }
+
+void	ios_$close(id, st)
+		ios_$id_t id;
+		status_$t *st;
+		{ /* void */ }
+
+void	ios_$get_ec(id, key, ecp, st)
+		ios_$id_t id;
+		ios_$ec_key_t key;
+		ec2_$ptr_t *ecp;
+		status_$t *st;
+		{ /* void */ }
+
+void	ios_$delete(id, st)
+		ios_$id_t id;
+		status_$t *st;
+		{ /* void */ }
+
+void	ios_$truncate(id, st)
+		ios_$id_t id;
+		status_$t *st;
+		{ /* void */ }
+
+long	ios_$get(id, opt, b, l, st)
+		ios_$id_t id;
+		ios_$put_get_opts_t opt;
+		char	*b;
+		long	l;
+		status_$t *st;
+		{ return(*(long *)0); }
+
+long	ios_$locate(id, opt, b, l, st)
+		ios_$id_t id;
+		ios_$put_get_opts_t opt;
+		char	**b;
+		long	l;
+		status_$t *st;
+		{ return(*(long *)0); }
+
+void	ios_$put(id, opt, b, l, st)
+		ios_$id_t id;
+		ios_$put_get_opts_t opt;
+		char	*b;
+		long	l;
+		status_$t *st;
+		{ /* void */ }
+
+long	ios_$putp(id, opt, b, l, st)
+		ios_$id_t id;
+		ios_$put_get_opts_t opt;
+		char	*b;
+		long	l;
+		status_$t *st;
+		{ return(*(long *)0); }
+
+long	ios_$inq_rec_remainder(id, st)
+		ios_$id_t id;
+		status_$t *st;
+		{ return(*(long *)0); }
+
+ios_$mgr_flag_set ios_$inq_mgr_flags(id, st)
+		ios_$id_t id;
+		status_$t *st;
+		{ return(*(ios_$mgr_flag_set *)0); }
+
+ios_$obj_flag_set ios_$inq_obj_flags(id, st)
+		ios_$id_t id;
+		status_$t *st;
+		{ return(*(ios_$obj_flag_set *)0); }
+
+void	ios_$set_obj_flag(id, f, on_off, st)
+		ios_$id_t id;
+		ios_$obj_flag_t f;
+		boolean	on_off;
+		status_$t *st;
+		{ /* void */ }
+
+ios_$conn_flag_set ios_$inq_conn_flags(id, st)
+		ios_$id_t id;
+		status_$t *st;
+		{ return(*(ios_$conn_flag_set *)0); }
+
+void	ios_$set_conn_flag(id, f, on_off, st)
+		ios_$id_t id;
+		ios_$conn_flag_t f;
+		boolean	on_off;
+		status_$t *st;
+		{ /* void */ }
+
+void	ios_$seek(id, abs_rel, seek_type, key, st)
+		ios_$id_t id;
+		ios_$abs_rel_t abs_rel;
+		ios_$seek_type_t seek_type;
+		long	key;
+		status_$t *st;
+		{ /* void */ }
+
+void	ios_$seek_full_key(id, key, status)
+		ios_$id_t id;
+		ios_$seek_key_t key;
+		status_$t *status;
+		{ /* void */ }
+
+void	ios_$seek_short_key(id, key, status)
+		ios_$id_t id;
+		long	key;
+		status_$t *status;
+		{ /* void */ }
+
+void	ios_$seek_to_bof(id, status)
+		ios_$id_t id;
+		status_$t *status;
+		{ /* void */ }
+
+void	ios_$seek_to_eof(id, status)
+		ios_$id_t id;
+		status_$t *status;
+		{ /* void */ }
+
+long	ios_$inq_short_key(id, pos_opt, status)
+		ios_$id_t id;
+		ios_$pos_opt_t pos_opt;
+		status_$t *status;
+		{ return(*(long *)0); }
+
+void	ios_$inq_full_key(id, pos_opt, key, status)
+		ios_$id_t id;
+		ios_$pos_opt_t pos_opt;
+		ios_$seek_key_t *key;
+		status_$t *status;
+		{ /* void */ }
+
+long	ios_$inq_rec_pos(id, pos_opt, st)
+		ios_$id_t id;
+		ios_$pos_opt_t pos_opt;
+		status_$t *st;
+		{ return(*(long *)0); }
+
+long	ios_$inq_byte_pos(id, pos_opt, status)
+		ios_$id_t id;
+		ios_$pos_opt_t pos_opt;
+		status_$t *status;
+		{ return(*(long *)0); }
+
+long	ios_$inq_cur_rec_len(id, status)
+		ios_$id_t id;
+		status_$t *status;
+		{ return(*(long *)0); }
+
+ios_$rtype_t ios_$inq_rec_type(id, status)
+		ios_$id_t id;
+		status_$t *status;
+		{ return(*(ios_$rtype_t *)0); }
+
+void	ios_$set_rec_type(id, rec_type, rec_len, status)
+		ios_$id_t id;
+		ios_$rtype_t rec_type;
+		long	rec_len;
+		status_$t *status;
+		{ /* void */ }
+
+void	ios_$force_write_file(id, status)
+		ios_$id_t id;
+		status_$t *status;
+		{ /* void */ }
+
+void	ios_$inq_file_attr(id, dtc, dtm, dtu, blks, status)
+		ios_$id_t id;
+		time_$clockh_t *dtc;
+		time_$clockh_t *dtm;
+		time_$clockh_t *dtu;
+		long	*blks;
+		status_$t *status;
+		{ /* void */ }
+
+void	ios_$inq_path_name_lc(strid, ntype, max_nl, name, nl, status)
+		ios_$id_t strid;
+		ios_$name_type_t ntype;
+		short	max_nl;
+		char	*name;
+		short	*nl;
+		status_$t *status;
+		{ /* void */ }
+
+void	ios_$change_path_name(strid, new_name, new_nl, status)
+		ios_$id_t strid;
+		char	*new_name;
+		short	new_nl;
+		status_$t *status;
+		{ /* void */ }
+
+void	ios_$inq_type_uid(strid, type_uid, status)
+		ios_$id_t strid;
+		uid_$t	*type_uid;
+		status_$t *status;
+		{ /* void */ }
+
+void	*ios_$get_handle(strid, type_uid, status)
+		ios_$id_t strid;
+		uid_$t	type_uid;
+		status_$t *status;
+		{ /* void */ }
+
+void	ios_$set_locate_buffer_size(id, size, status)
+		ios_$id_t id;
+		short	size;
+		status_$t *status;
+		{ /* void */ }
+
+ios_$id_t ios_$switch(strid1, strid2, status)
+		ios_$id_t strid1;
+		ios_$id_t strid2;
+		status_$t *status;
+		{ return(*(ios_$id_t *)0); }
+
+ios_$id_t ios_$replicate(strid1, strid2, status)
+		ios_$id_t strid1;
+		ios_$id_t strid2;
+		status_$t *status;
+		{ return(*(ios_$id_t *)0); }
+
+ios_$id_t ios_$dup(strid1, strid2, status)
+		ios_$id_t strid1;
+		ios_$id_t strid2;
+		status_$t *status;
+		{ return(*(ios_$id_t *)0); }
+
+boolean	ios_$equal(strid1, strid2, status)
+		ios_$id_t strid1;
+		ios_$id_t strid2;
+		status_$t *status;
+		{ return(*(boolean *)0); }
+
+void	ios_$set_dir(pname, plen, dir, status)
+		char	*pname;
+		pinteger plen;
+		ios_$dir_type_t dir;
+		status_$t *status;
+		{ /* void */ }
+
+void	ios_$get_dir_lc(dir, max_plen, pname, plen, status)
+		ios_$dir_type_t dir;
+		short	max_plen;
+		char	*pname;
+		short	*plen;
+		status_$t *status;
+		{ /* void */ }
+
+void	ios_$inq_path_name(strid, ntype, name, nl, status)
+		ios_$id_t strid;
+		ios_$name_type_t ntype;
+		char	*name;
+		short	*nl;
+		status_$t *status;
+		{ /* void */ }
+
+void	ios_$get_dir(dir, pname, plen, status)
+		ios_$dir_type_t dir;
+		char	*pname;
+		short	*plen;
+		status_$t *status;
+		{ /* void */ }
+
+#include <apollo/name.h>
+
+void	name_$get_wdir_lc(maxpathlen, pathname, name_length, status)
+		unsigned short maxpathlen;
+		char	*pathname;
+		unsigned short *name_length;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$get_ndir_lc(maxpathlen, pathname, name_length, status)
+		unsigned short maxpathlen;
+		char	*pathname;
+		unsigned short *name_length;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$create_file(filename, name_length, status)
+		char	*filename;
+		unsigned short name_length;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$delete_file(filename, name_length, status)
+		char	*filename;
+		unsigned short name_length;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$create_directory(directory_name, name_length, status)
+		char	*directory_name;
+		unsigned short name_length;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$delete_directory(directory_name, name_length, status)
+		char	*directory_name;
+		unsigned short name_length;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$read_dir_lc(dir_name, name_length, seek_to_bof, cursor, max_count, dirlistsize, dirlist, read_count, status)
+		char	*dir_name;
+		unsigned short name_length;
+		boolean	*seek_to_bof;
+		name_$cursor_t *cursor;
+		unsigned short max_count;
+		unsigned long dirlistsize;
+		char	*dirlist;
+		unsigned short *read_count;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$add_link(linkname, name_length, link_text, text_length, status)
+		char	*linkname;
+		unsigned short name_length;
+		char	*link_text;
+		unsigned short text_length;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$read_link_lc(linkname, name_length, maxlinklen, link_text, text_length, status)
+		char	*linkname;
+		unsigned short name_length;
+		unsigned short maxlinklen;
+		char	*link_text;
+		unsigned short *text_length;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$drop_link(linkname, name_length, status)
+		char	*linkname;
+		unsigned short name_length;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$extract_data_lc(dir_entry, entry_type, entry_length, max_entry_length, entry_name, status)
+		name_$canonical_dir_entry_t dir_entry;
+		short	*entry_type;
+		unsigned short *entry_length;
+		unsigned short max_entry_length;
+		char	*entry_name;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$get_path_lc(in_name, in_len, maxpnamelen, out_name, out_len, status)
+		char	*in_name;
+		unsigned short in_len;
+		unsigned short maxpnamelen;
+		char	*out_name;
+		unsigned short *out_len;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$cname(old_pathname, old_length, new_leaf, leaf_length, status)
+		char	*old_pathname;
+		unsigned short old_length;
+		char	*new_leaf;
+		unsigned short leaf_length;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$set_wdir(name, name_length, status)
+		char	*name;
+		unsigned short name_length;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$get_wdir(name, name_length, status)
+		char	*name;
+		unsigned short *name_length;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$get_wdir_cc(name, name_length, status)
+		char	*name;
+		unsigned short *name_length;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$set_ndir(name, name_length, status)
+		char	*name;
+		unsigned short name_length;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$get_ndir(name, name_length, status)
+		char	*name;
+		unsigned short *name_length;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$get_ndir_cc(name, name_length, status)
+		char	*name;
+		unsigned short *name_length;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$read_dir(dir_name, name_length, dirlist, index, max_count, read_count, status)
+		char	*dir_name;
+		unsigned short name_length;
+		name_$dir_entry_t *dirlist;
+		unsigned short *index;
+		unsigned short max_count;
+		unsigned short *read_count;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$read_dir_cc(dir_name, name_length, dirlist, index, max_count, read_count, status)
+		char	*dir_name;
+		unsigned short name_length;
+		name_$dir_entry_t *dirlist;
+		unsigned short *index;
+		unsigned short max_count;
+		unsigned short *read_count;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$read_link(linkname, name_length, link_text, text_length, status)
+		char	*linkname;
+		unsigned short name_length;
+		char	*link_text;
+		unsigned short *text_length;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$extract_data(dir_entry, entry_type, entry_length, entry_name)
+		name_$dir_entry_t dir_entry;
+		unsigned short *entry_type;
+		unsigned short *entry_length;
+		char	*entry_name;
+		{ /* void */ }
+
+void	name_$get_path(in_name, in_len, out_name, out_len, status)
+		char	*in_name;
+		unsigned short in_len;
+		char	*out_name;
+		unsigned short *out_len;
+		status_$t *status;
+		{ /* void */ }
+
+void	name_$get_path_cc(in_name, in_len, out_name, out_len, status)
+		char	*in_name;
+		unsigned short in_len;
+		char	*out_name;
+		unsigned short *out_len;
+		status_$t *status;
+		{ /* void */ }
+
+#include <apollo/pad.h>
+
+void	pad_$raw(sid, sts)
+		short	sid;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$cooked(sid, sts)
+		short	sid;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$create(n, l, ptype, rel_pad, side, options, size, rslt_stream, s)
+		char	*n;
+		unsigned short l;
+		pad_$type_t ptype;
+		stream_$id_t rel_pad;
+		pad_$side_t side;
+		pad_$cre_opt_t options;
+		short	size;
+		stream_$id_t *rslt_stream;
+		status_$t *s;
+		{ /* void */ }
+
+void	pad_$create_window(n, l, ptype, unit, window, rslt_stream, s)
+		char	*n;
+		unsigned short l;
+		pad_$type_t ptype;
+		short	unit;
+		pad_$window_desc_t window;
+		stream_$id_t *rslt_stream;
+		status_$t *s;
+		{ /* void */ }
+
+void	pad_$create_frame(sid, width, height, sts)
+		stream_$id_t sid;
+		short	width;
+		short	height;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$delete_frame(sid, sts)
+		stream_$id_t sid;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$clear_frame(sid, clr_key, sts)
+		stream_$id_t sid;
+		stream_$sk_t clr_key;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$close_frame(sid, sts)
+		stream_$id_t sid;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$move(sid, rel_abs, x, y, sts)
+		stream_$id_t sid;
+		pad_$rel_abs_t rel_abs;
+		short	x;
+		short	y;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$set_scale(sid, xs, ys, sts)
+		stream_$id_t sid;
+		short	xs;
+		short	ys;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$load_font(sid, fname, fnl, fontx, sts)
+		stream_$id_t sid;
+		char	*fname;
+		short	fnl;
+		short	*fontx;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$use_font(sid, fontx, sts)
+		stream_$id_t sid;
+		short	fontx;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$inq_font(sid, fwidth, fhite, fname, fnsize, fnlen, sts)
+		stream_$id_t sid;
+		short	*fwidth;
+		short	*fhite;
+		char	*fname;
+		short	fnsize;
+		short	*fnlen;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$inq_windows(sid, wlist, wlsize, wcnt, sts)
+		stream_$id_t sid;
+		pad_$window_desc_t *wlist;
+		short	wlsize;
+		short	*wcnt;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$inq_position(sid, y, x, sts)
+		stream_$id_t sid;
+		short	*y;
+		short	*x;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$set_tabs(sid, tsb, cnt, sts)
+		stream_$id_t sid;
+		short	*tsb;
+		short	cnt;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$cpr_enable(sid, cpr_type, sts)
+		stream_$id_t sid;
+		short	cpr_type;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$locate(sid, x, y, c, sts)
+		stream_$id_t sid;
+		short	*x;
+		short	*y;
+		char	*c;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$dm_cmd(sid, cmd, cmd_len, sts)
+		stream_$id_t sid;
+		char	*cmd;
+		short	cmd_len;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$def_pfk(sid, key_name, def, def_len, sts)
+		stream_$id_t sid;
+		char	*key_name;
+		char	*def;
+		short	def_len;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$edit_wait(sid, sts)
+		stream_$id_t sid;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$inq_disp_type(sid, dtype, unit, sts)
+		stream_$id_t sid;
+		pad_$display_type_t *dtype;
+		short	*unit;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$inq_view(sid, window_no, line, eof_lnum, x_offset, y_offset, sts)
+		stream_$id_t sid;
+		short	window_no;
+		long	*line;
+		long	*eof_lnum;
+		short	*x_offset;
+		short	*y_offset;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$set_view(sid, window_no, line, x_offset, y_offset, sts)
+		stream_$id_t sid;
+		short	window_no;
+		long	line;
+		short	x_offset;
+		short	y_offset;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$inq_kbd(sid, buf_size, kbd_suffix, len, sts)
+		stream_$id_t sid;
+		short	buf_size;
+		char	*kbd_suffix;
+		short	*len;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$pop_push_window(sid, window_no, pop_push, sts)
+		stream_$id_t sid;
+		short	window_no;
+		boolean	pop_push;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$set_border(sid, window_no, border, sts)
+		stream_$id_t sid;
+		short	window_no;
+		boolean	border;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$create_icon(n, l, ptype, unit, icon_pos, icon_font_char, window, rslt_stream, s)
+		char	*n;
+		unsigned short l;
+		pad_$type_t ptype;
+		short	unit;
+		pad_$position_t icon_pos;
+		char	icon_font_char;
+		pad_$window_desc_t *window;
+		stream_$id_t *rslt_stream;
+		status_$t *s;
+		{ /* void */ }
+
+void	pad_$make_icon(sid, window_no, font_char, sts)
+		stream_$id_t sid;
+		short	window_no;
+		char	font_char;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$icon_wait(sid, window_no, icon_moved, icon_pos_if_moved, sts)
+		stream_$id_t sid;
+		short	window_no;
+		boolean	*icon_moved;
+		pad_$position_t *icon_pos_if_moved;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$set_full_window(sid, window_no, window, sts)
+		stream_$id_t sid;
+		short	window_no;
+		pad_$window_desc_t *window;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$inq_full_window(sid, window_no, window, sts)
+		stream_$id_t sid;
+		short	window_no;
+		pad_$window_desc_t *window;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$set_icon_pos(sid, window_no, icon_pos, font_char, sts)
+		stream_$id_t sid;
+		short	window_no;
+		pad_$position_t icon_pos;
+		char	font_char;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$inq_icon(sid, window_no, icon_pos, font_char, sts)
+		stream_$id_t sid;
+		short	window_no;
+		pad_$position_t *icon_pos;
+		char	*font_char;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$make_invisible(sid, window_no, sts)
+		stream_$id_t sid;
+		short	window_no;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$select_window(sid, window_no, sts)
+		stream_$id_t sid;
+		short	window_no;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$set_auto_close(sid, window_no, auto_close, sts)
+		stream_$id_t sid;
+		short	window_no;
+		boolean	auto_close;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$inq_icon_font(sid, window_no, font_name, fnbs, fnlen, sts)
+		stream_$id_t sid;
+		short	window_no;
+		char	*font_name;
+		short	fnbs;
+		short	*fnlen;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$set_icon_font(sid, window_no, font_name, fnlen, sts)
+		stream_$id_t sid;
+		short	window_no;
+		char	*font_name;
+		short	fnlen;
+		status_$t *sts;
+		{ /* void */ }
+
+boolean	pad_$is_icon(sid, window_no, sts)
+		stream_$id_t sid;
+		short	window_no;
+		status_$t *sts;
+		{ return(*(boolean *)0); }
+
+void	pad_$force_prompt(sid, sts)
+		stream_$id_t sid;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$isa(sid, sts)
+		stream_$id_t sid;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$isa_dm_pad(sid, sts)
+		stream_$id_t sid;
+		status_$t *sts;
+		{ /* void */ }
+
+void	pad_$set_erase(sid, window_no, erase, sts)
+		stream_$id_t sid;
+		short	window_no;
+		boolean	erase;
+		status_$t *sts;
+		{ /* void */ }
+
+#include <apollo/tty.h>
+
+void	tty_$isa(id, st)
+		ios_$id_t id;
+		status_$t *st;
+		{ /* void */ }
+
+void	tty_$inq_size(id, height, width, st)
+		ios_$id_t id;
+		pinteger *height;
+		pinteger *width;
+		status_$t *st;
+		{ /* void */ }
+
+void	tty_$set_size(id, height, width, st)
+		ios_$id_t id;
+		pinteger height;
+		pinteger width;
+		status_$t *st;
+		{ /* void */ }
+
+void	tty_$set_input_flag(id, flag, val, st)
+		ios_$id_t id;
+		tty_$input_flag_t flag;
+		boolean	val;
+		status_$t *st;
+		{ /* void */ }
+
+tty_$input_flag_set_t tty_$inq_input_flags(id, st)
+		ios_$id_t id;
+		status_$t *st;
+		{ return(*(tty_$input_flag_set_t *)0); }
+
+void	tty_$set_output_flag(id, flag, val, st)
+		ios_$id_t id;
+		tty_$output_flag_t flag;
+		boolean	val;
+		status_$t *st;
+		{ /* void */ }
+
+tty_$output_flag_set_t tty_$inq_output_flags(id, st)
+		ios_$id_t id;
+		status_$t *st;
+		{ return(*(tty_$output_flag_set_t *)0); }
+
+void	tty_$set_echo_flag(id, flag, val, st)
+		ios_$id_t id;
+		tty_$echo_flag_t flag;
+		boolean	val;
+		status_$t *st;
+		{ /* void */ }
+
+tty_$echo_flag_set_t tty_$inq_echo_flags(id, st)
+		ios_$id_t id;
+		status_$t *st;
+		{ return(*(tty_$echo_flag_set_t *)0); }
+
+void	tty_$set_func_char(id, func, ch, st)
+		ios_$id_t id;
+		tty_$func_t func;
+		char	ch;
+		status_$t *st;
+		{ /* void */ }
+
+void	tty_$inq_func_char(id, func, ch, st)
+		ios_$id_t id;
+		tty_$func_t func;
+		char	*ch;
+		status_$t *st;
+		{ /* void */ }
+
+void	tty_$enable_func(id, func, val, st)
+		ios_$id_t id;
+		tty_$func_t func;
+		boolean	val;
+		status_$t *st;
+		{ /* void */ }
+
+tty_$func_set_t tty_$inq_func_enabled(id, st)
+		ios_$id_t id;
+		status_$t *st;
+		{ return(*(tty_$func_set_t *)0); }
+
+void	tty_$set_process_group(id, uid, st)
+		ios_$id_t id;
+		uid_$t	uid;
+		status_$t *st;
+		{ /* void */ }
+
+void	tty_$inq_process_group(id, uid, st)
+		ios_$id_t id;
+		uid_$t	*uid;
+		status_$t *st;
+		{ /* void */ }
+
+void	tty_$set_input_break_mode(id, mode, st)
+		ios_$id_t id;
+		tty_$input_break_mode_t *mode;
+		status_$t *st;
+		{ /* void */ }
+
+void	tty_$inq_input_break_mode(id, mode, st)
+		ios_$id_t id;
+		tty_$input_break_mode_t *mode;
+		status_$t *st;
+		{ /* void */ }
+
+void	tty_$drain_output(id, st)
+		ios_$id_t id;
+		status_$t *st;
+		{ /* void */ }
+
+void	tty_$discard_input(id, st)
+		ios_$id_t id;
+		status_$t *st;
+		{ /* void */ }
+
+void	tty_$discard_output(id, st)
+		ios_$id_t id;
+		status_$t *st;
+		{ /* void */ }
+
+void	tty_$simulate_input(id, ch, st)
+		ios_$id_t id;
+		char	ch;
+		status_$t *st;
+		{ /* void */ }
+
+void	tty_$set_delay(id, delay, val, st)
+		ios_$id_t id;
+		tty_$delay_t delay;
+		pinteger val;
+		status_$t *st;
+		{ /* void */ }
+
+pinteger tty_$inq_delay(id, delay, st)
+		ios_$id_t id;
+		tty_$delay_t delay;
+		status_$t *st;
+		{ return(*(pinteger *)0); }
+
+void	tty_$set_unix_mode(id, mode, val, st)
+		ios_$id_t id;
+		tty_$unix_mode_t mode;
+		boolean	val;
+		status_$t *st;
+		{ /* void */ }
+
+tty_$unix_mode_set_t tty_$inq_unix_modes(id, st)
+		ios_$id_t id;
+		status_$t *st;
+		{ return(*(tty_$unix_mode_set_t *)0); }
+
+void	tty_$set_raw(id, val, st)
+		ios_$id_t id;
+		boolean	val;
+		status_$t *st;
+		{ /* void */ }
+
+boolean	tty_$inq_raw(id, st)
+		ios_$id_t id;
+		status_$t *st;
+		{ return(*(boolean *)0); }
+
+void	tty_$set_non_canon_break_mode(id, mode, st)
+		ios_$id_t id;
+		tty_$input_break_mode_t *mode;
+		status_$t *st;
+		{ /* void */ }
+
+#include <apollo/type_uids.h>
+
+uid_$t	case_hm_$uid;
+uid_$t	cmpexe_$uid;
+uid_$t	coff_$uid;
+uid_$t	d3m_area_$uid;
+uid_$t	d3m_sch_$uid;
+uid_$t	directory_$uid;
+uid_$t	dm_edit_$uid;
+uid_$t	hdr_undef_$uid;
+uid_$t	input_pad_$uid;
+uid_$t	mbx_$uid;
+uid_$t	mt_$uid;
+uid_$t	nulldev_$uid;
+uid_$t	object_file_$uid;
+uid_$t	pad_$uid;
+uid_$t	pty_$slave_uid;
+uid_$t	pty_$uid;
+uid_$t	records_$uid;
+uid_$t	sio_$uid;
+uid_$t	tcp_$uid;
+uid_$t	uasc_$uid;
+uid_$t	unstruct_$uid;
