@@ -1,4 +1,16 @@
--- $Id: CHANGES,v 4.13 2005/12/09 00:54:45 tom Exp $
+-- $Id: CHANGES,v 4.16 2008/01/01 22:58:06 tom Exp $
+
+Version 4.7f
+2008/1/1
+- add symbol for __gnuc_va_list
+- add some data for c99 syntax to test-cases, e.g., long long.
+- review/fix some additional places where need_temp() call is needed.
+- fix a reference to unallocated storage when reading from standard input
+  (Fedora #315061).
+- minor updates to configure script macros
+- update mkdirs.sh (for parallel makes)
+- update config.guess, config.sub
+- rename install.sh to install-sh
 
 Version 4.7e
 2005/12/8

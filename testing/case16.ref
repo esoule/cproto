@@ -361,3 +361,7 @@ extern void (*__glob_closedir_hook) (void * __stream);
 /* inline function */
 int inline inline_func(double x) { return(0); }
 static int inline local_inline_func(double x) { return(0); }
+
+/* c99 types */
+long long xxx = 1;
+char *xxs = "\x1234\?\u1234";

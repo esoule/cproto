@@ -52,3 +52,5 @@ extern int K_R_int_val(long *p1, int p2);
 extern int K_R_int_val2(long *p1, int p2);
 extern void K_R_void_val(long *p1, int p2);
 extern int K_R_void_val2(long *p1, int p2);
+extern long long xxx;
+extern char *xxs;

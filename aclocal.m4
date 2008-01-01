@@ -1,6 +1,31 @@
-dnl $Id: aclocal.m4,v 4.6 2005/12/08 20:43:14 tom Exp $
+dnl $Id: aclocal.m4,v 4.7 2008/01/01 21:21:39 tom Exp $
 dnl
-dnl Macros for cproto configure script (T.Dickey)
+dnl Macros for cproto configure script
+dnl ---------------------------------------------------------------------------
+dnl Copyright (c) 1994-2005,2007 Thomas E. Dickey
+dnl
+dnl Permission is hereby granted, free of charge, to any person obtaining a
+dnl copy of this software and associated documentation files (the "Software"),
+dnl to deal in the Software without restriction, including without limitation
+dnl the rights to use, copy, modify, merge, publish, distribute, distribute
+dnl with modifications, sublicense, and/or sell copies of the Software, and to
+dnl permit persons to whom the Software is furnished to do so, subject to the
+dnl following conditions:
+dnl
+dnl The above copyright notice and this permission notice shall be included in
+dnl all copies or substantial portions of the Software.
+dnl
+dnl THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+dnl IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+dnl FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+dnl THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+dnl LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+dnl FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+dnl DEALINGS IN THE SOFTWARE.
+dnl
+dnl Except as contained in this notice, the name(s) of the above copyright
+dnl holders shall not be used in advertising or otherwise to promote the sale,
+dnl use or other dealings in this Software without prior written authorization.
 dnl ---------------------------------------------------------------------------
 dnl ---------------------------------------------------------------------------
 dnl CF_ADD_CFLAGS version: 7 updated: 2004/04/25 17:48:30
@@ -256,7 +281,7 @@ AC_SUBST(SHOW_CC)
 AC_SUBST(ECHO_CC)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GCC_ATTRIBUTES version: 10 updated: 2005/05/28 13:16:28
+dnl CF_GCC_ATTRIBUTES version: 11 updated: 2007/07/29 09:55:12
 dnl -----------------
 dnl Test for availability of useful gcc __attribute__ directives to quiet
 dnl compiler warnings.  Though useful, not all are supported -- and contrary
@@ -283,7 +308,7 @@ if test "$GCC" = yes
 then
 	AC_CHECKING([for $CC __attribute__ directives])
 cat > conftest.$ac_ext <<EOF
-#line __oline__ "configure"
+#line __oline__ "${as_me-configure}"
 #include "confdefs.h"
 #include "conftest.h"
 #include "conftest.i"
@@ -345,7 +370,7 @@ if test "$GCC" = yes ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GCC_WARNINGS version: 20 updated: 2005/08/06 18:37:29
+dnl CF_GCC_WARNINGS version: 22 updated: 2007/07/29 09:55:12
 dnl ---------------
 dnl Check if the compiler supports useful warning options.  There's a few that
 dnl we don't use, simply because they're too noisy:
@@ -370,7 +395,7 @@ AC_REQUIRE([CF_GCC_VERSION])
 CF_INTEL_COMPILER(GCC,INTEL_COMPILER,CFLAGS)
 
 cat > conftest.$ac_ext <<EOF
-#line __oline__ "configure"
+#line __oline__ "${as_me-configure}"
 int main(int argc, char *argv[[]]) { return (argv[[argc-1]] == 0) ; }
 EOF
 
@@ -391,7 +416,7 @@ then
 	AC_CHECKING([for $CC warning options])
 	cf_save_CFLAGS="$CFLAGS"
 	EXTRA_CFLAGS="-Wall"
-	for cf_opt in $1 \
+	for cf_opt in \
 		wd1419 \
 		wd1682 \
 		wd1683 \
@@ -493,7 +518,7 @@ cf_save_CFLAGS="$cf_save_CFLAGS -we147 -no-gcc"
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MKSTEMP version: 3 updated: 2001/11/08 20:59:59
+dnl CF_MKSTEMP version: 5 updated: 2006/12/16 12:33:30
 dnl ----------
 dnl Check for a working mkstemp.  This creates two files, checks that they are
 dnl successfully created and distinct (AmigaOS apparently fails on the last).
@@ -531,7 +556,7 @@ int main()
 	if (result == 0
 	 && !strcmp(name[0], name[1]))
 		result = 1;
-	exit(result);
+	${cf_cv_main_return:-return}(result);
 }
 ],[cf_cv_func_mkstemp=yes
 ],[cf_cv_func_mkstemp=no
@@ -541,6 +566,43 @@ int main()
 if test "$cf_cv_func_mkstemp" = yes ; then
 	AC_DEFINE(HAVE_MKSTEMP)
 fi
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_MSG_LOG version: 4 updated: 2007/07/29 09:55:12
+dnl ----------
+dnl Write a debug message to config.log, along with the line number in the
+dnl configure script.
+AC_DEFUN([CF_MSG_LOG],[
+echo "${as_me-configure}:__oline__: testing $* ..." 1>&AC_FD_CC
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_NO_LEAKS_OPTION version: 4 updated: 2006/12/16 14:24:05
+dnl ------------------
+dnl see CF_WITH_NO_LEAKS
+AC_DEFUN([CF_NO_LEAKS_OPTION],[
+AC_MSG_CHECKING(if you want to use $1 for testing)
+AC_ARG_WITH($1,
+	[$2],
+	[AC_DEFINE($3)ifelse([$4],,[
+	 $4
+])
+	: ${with_cflags:=-g}
+	: ${with_no_leaks:=yes}
+	 with_$1=yes],
+	[with_$1=])
+AC_MSG_RESULT(${with_$1:-no})
+
+case .$with_cflags in #(vi
+.*-g*)
+	case .$CFLAGS in #(vi
+	.*-g*) #(vi
+		;;
+	*)
+		CF_ADD_CFLAGS([-g])
+		;;
+	esac
+	;;
+esac
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_POPEN_TEST version: 3 updated: 2005/08/21 13:46:00
@@ -620,41 +682,38 @@ AC_DEFUN([CF_UPPER],
 $1=`echo "$2" | sed y%abcdefghijklmnopqrstuvwxyz./-%ABCDEFGHIJKLMNOPQRSTUVWXYZ___%`
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_VERBOSE version: 2 updated: 1997/09/05 10:45:14
+dnl CF_VERBOSE version: 3 updated: 2007/07/29 09:55:12
 dnl ----------
 dnl Use AC_VERBOSE w/o the warnings
 AC_DEFUN([CF_VERBOSE],
 [test -n "$verbose" && echo "	$1" 1>&AC_FD_MSG
+CF_MSG_LOG([$1])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_DBMALLOC version: 4 updated: 2004/02/28 05:49:27
+dnl CF_WITH_DBMALLOC version: 6 updated: 2006/12/16 14:24:05
 dnl ----------------
 dnl Configure-option for dbmalloc.  The optional parameter is used to override
 dnl the updating of $LIBS, e.g., to avoid conflict with subsequent tests.
 AC_DEFUN([CF_WITH_DBMALLOC],[
-AC_MSG_CHECKING(if you want to link with dbmalloc for testing)
-AC_ARG_WITH(dbmalloc,
-	[  --with-dbmalloc         use Conor Cahill's dbmalloc library],
-	[with_dbmalloc=$withval],
-	[with_dbmalloc=no])
-AC_MSG_RESULT($with_dbmalloc)
+CF_NO_LEAKS_OPTION(dbmalloc,
+	[  --with-dbmalloc         test: use Conor Cahill's dbmalloc library],
+	[USE_DBMALLOC])
+
 if test "$with_dbmalloc" = yes ; then
 	AC_CHECK_HEADER(dbmalloc.h,
 		[AC_CHECK_LIB(dbmalloc,[debug_malloc]ifelse($1,,[],[,$1]))])
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_DMALLOC version: 4 updated: 2004/02/28 05:49:27
+dnl CF_WITH_DMALLOC version: 6 updated: 2006/12/16 14:24:05
 dnl ---------------
 dnl Configure-option for dmalloc.  The optional parameter is used to override
 dnl the updating of $LIBS, e.g., to avoid conflict with subsequent tests.
 AC_DEFUN([CF_WITH_DMALLOC],[
-AC_MSG_CHECKING(if you want to link with dmalloc for testing)
-AC_ARG_WITH(dmalloc,
-	[  --with-dmalloc          use Gray Watson's dmalloc library],
-	[with_dmalloc=$withval],
-	[with_dmalloc=no])
-AC_MSG_RESULT($with_dmalloc)
+CF_NO_LEAKS_OPTION(dmalloc,
+	[  --with-dmalloc          test: use Gray Watson's dmalloc library],
+	[USE_DMALLOC])
+
 if test "$with_dmalloc" = yes ; then
 	AC_CHECK_HEADER(dmalloc.h,
 		[AC_CHECK_LIB(dmalloc,[dmalloc_debug]ifelse($1,,[],[,$1]))])
@@ -684,7 +743,7 @@ fi
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_YACC_ERROR version: 4 updated: 2005/08/21 13:46:00
+dnl CF_YACC_ERROR version: 5 updated: 2007/04/28 09:15:55
 dnl -------------
 dnl	Test the supplied version of yacc to see which (if any) of the
 dnl	error-reporting enhancements will work.
@@ -702,7 +761,7 @@ cat >yacctest.y <<EOF
 #include <stdio.h>
 #include <ctype.h>
 #include "yyerror.c"
-static void yaccError(s) char *s; { exit(0); }
+static void yaccError(s) char *s; { ${cf_cv_main_return-return}(0); }
 int yylex (void)
 { return 1; }
 %}

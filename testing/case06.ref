@@ -52,3 +52,5 @@ int K_R_int_val(long *p1, int p2);
 int K_R_int_val2(long *p1, int p2);
 void K_R_void_val(long *p1, int p2);
 int K_R_void_val2(long *p1, int p2);
+long long xxx;
+char *xxs;

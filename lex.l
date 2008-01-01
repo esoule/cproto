@@ -1,7 +1,7 @@
 %p 3000
 
 %{
-/* $Id: lex.l,v 4.15 2005/12/09 00:12:48 tom Exp $
+/* $Id: lex.l,v 4.16 2008/01/01 21:45:24 tom Exp $
  *
  * Lexical analyzer for C function prototype generator
  *
@@ -723,6 +723,7 @@ get_cpp_directive (int copy)
 
     lastc[0] = lastc[1] = lastc[2] = lastc[3] = '\0';
     if (copy) {
+	need_temp(2);
 	*temp_buf = '\0';
     }
 

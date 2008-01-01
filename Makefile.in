@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 4.11 2005/12/08 20:53:09 tom Exp $
+# $Id: Makefile.in,v 4.12 2008/01/01 23:21:43 tom Exp $
 #
 # UNIX template-makefile for C prototype generator
 
@@ -114,7 +114,7 @@ $(THIS).man : $(THIS).1
 	- nroff -man $(srcdir)/$(THIS).1 >$@
 
 mostlyclean :
-	- rm -f core .nfs* *$o *.bak *.BAK *.log *.man *.out $(JUNK) default.h
+	- rm -f core .nfs* *$o *.bak *.BAK *.man *.out $(JUNK) default.h
 
 clean : mostlyclean
 	- rm -f $(PROG)

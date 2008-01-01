@@ -1,4 +1,4 @@
-/* $Id: grammar.y,v 4.11 2005/12/09 00:42:19 tom Exp $
+/* $Id: grammar.y,v 4.13 2008/01/01 22:53:01 tom Exp $
  *
  * yacc grammar for C function prototype generator
  * This was derived from the grammar in Appendix A of
@@ -495,7 +495,7 @@ struct_or_union_specifier
 	{
 	    char *s;
 	    if ((s = implied_typedef()) == 0) {
-		need_temp(2 + 2 * strlen($1.text));
+		need_temp(2 + strlen($1.text) + strlen($2.text));
 	        (void)sprintf(s = temp_buf, "%s %s", $1.text, $2.text);
 	    }
 	    new_decl_spec(&$$, s, $1.begin, DS_NONE);
@@ -511,7 +511,7 @@ struct_or_union_specifier
 	}
 	| struct_or_union any_id
 	{
-	    need_temp(2 + 2 * strlen($1.text));
+	    need_temp(2 + strlen($1.text) + strlen($2.text));
 	    (void)sprintf(temp_buf, "%s %s", $1.text, $2.text);
 	    new_decl_spec(&$$, temp_buf, $1.begin, DS_NONE);
 	}
@@ -671,11 +671,13 @@ direct_declarator
 pointer
 	: '*' opt_type_qualifiers
 	{
+	    need_temp(2 + strlen($2.text));
 	    (void)sprintf($$.text, "*%s", $2.text);
 	    $$.begin = $1.begin;
 	}
 	| '*' opt_type_qualifiers pointer
 	{
+	    need_temp(2 + strlen($2.text) + strlen($3.text));
 	    (void)sprintf($$.text, "*%s%s", $2.text, $3.text);
 	    $$.begin = $1.begin;
 	}
@@ -693,12 +695,14 @@ opt_type_qualifiers
 type_qualifier_list
 	: type_qualifier
 	{
+	    need_temp(2 + strlen($1.text));
 	    (void)sprintf($$.text, "%s ", $1.text);
 	    $$.begin = $1.begin;
 	    free($1.text);
 	}
 	| type_qualifier_list type_qualifier
 	{
+	    need_temp(1 + strlen($1.text) + strlen($2.text));
 	    (void)sprintf($$.text, "%s%s ", $1.text, $2.text);
 	    $$.begin = $1.begin;
 	    free($2.text);
@@ -769,6 +773,7 @@ identifier_or_ref
 	}
 	| '&' any_id
 	{
+	    need_temp(2 + strlen($2.text));
 #if OPT_LINTLIBRARY
 	    if (lintLibrary()) { /* Lint doesn't grok C++ ref variables */
 		$$ = $2;
@@ -949,6 +954,7 @@ init_parser (void)
 	"__builtin_va_list",
 	"__const",
 	"__const__",
+	"__gnuc_va_list",
 	"__inline",
 	"__inline__",
 	"__restrict",

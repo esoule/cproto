@@ -37,18 +37,18 @@ const	x18 = {0};
 volatile x19;
 
 typedef struct _first {
-        int a:5;
-        struct {
-                int a,b;
-        } b_struct;
-        char b:16, b1:1; 
-        long c:16, c1;
-        short d:16, d1:8, d2;
-        unsigned e:16;
-        float f;
-        double g;
-        struct _first *link;
-        } _FIRST;
+ int a:5;
+ struct {
+  int a,b;
+ } b_struct;
+ char b:16, b1:1; 
+ long c:16, c1;
+ short d:16, d1:8, d2;
+ unsigned e:16;
+ float f;
+ double g;
+ struct _first *link;
+ } _FIRST;
 
 typedef int badStyle;
 
@@ -65,9 +65,9 @@ _FIRST	last;
 _FIRST	first_last[];
 #undef _SECOND
 struct _second {
-                enum {true, false} bool;
-                enum {wrong=1, right=3} values;
-        } _SECOND;
+  enum {true, false} bool;
+  enum {wrong=1, right=3} values;
+ } _SECOND;
 #undef i
 int	i[];
 #undef f
@@ -129,8 +129,8 @@ enum zap2 what2;
 enum {a9,b9,c9,d9} what3;
 
 typedef struct bong {
-        int (*func)();
-        } BONG;
+ int (*func)();
+ } BONG;
 
 typedef char *string;
 
@@ -263,3 +263,8 @@ void	K_R_void_val2(
 		long	*p1, 
 		int	p2)
 		{ /* void */ }
+
+#undef xxx
+long long xxx;
+#undef xxs
+char	*xxs;

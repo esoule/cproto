@@ -1,4 +1,4 @@
-MANIFEST for cproto-4.7e, version v4_7e
+MANIFEST for cproto-4.7f, version v4_7f
 --------------------------------------------------------------------------------
 MANIFEST                        this file
 CHANGES                         summary of changes made to CPROTO
@@ -17,7 +17,7 @@ cproto.h                        common datatypes and definitions for CPROTO
 dump.c                          debug/trace
 dump.h                          interface of dump.c
 grammar.y                       yacc grammar for CPROTO
-install.sh                      install-script from X-Window distribution
+install-sh                      install-script
 lex.l                           lex rules for CPROTO
 lintlibs.c                      functions used for lint-library formatting
 mkdirs.sh                       mkinstalldirs (renamed for MSDOS compatibility)
