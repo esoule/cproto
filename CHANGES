@@ -1,4 +1,16 @@
--- $Id: CHANGES,v 4.16 2008/01/01 22:58:06 tom Exp $
+-- $Id: CHANGES,v 4.22 2008/11/20 01:35:06 tom Exp $
+
+2008/11/19
+Version 4.7g
+- modify cpp command to redirect stderr to /dev/null if -q option is given,
+  for consistency with the non-cpp mode (report by Nicolas Limare).
+  https://bugs.launchpad.net/ubuntu/+source/cproto/+bug/275248
+- add configure --disable-leaks option.
+- use configure macro CF_XOPEN_SOURCE macro to make mkstemp() prototyped on
+  Linux.
+- remove isascii() usage.
+- code cleanup, to remove K&R relicts.
+- update config.guess, config.sub
 
 Version 4.7f
 2008/1/1

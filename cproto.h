@@ -1,4 +1,4 @@
-/* $Id: cproto.h,v 4.11 2005/12/08 23:20:14 tom Exp $
+/* $Id: cproto.h,v 4.13 2008/11/20 00:45:31 tom Exp $
  *
  * Declarations for C function prototype generator
  */
@@ -214,7 +214,7 @@ extern boolean proto_comments;
 extern boolean file_comments;
 extern boolean quiet;
 extern char *func_directive;
-extern int num_inc_dir;
+extern unsigned num_inc_dir;
 extern char **inc_dir;
 extern FuncFormat fmt[4];
 
@@ -222,10 +222,10 @@ extern FuncFormat fmt[4];
 extern char *progname;
 extern int varargs_num;		/* supports varargs-comment */
 extern char *varargs_str;	/* additional info, such as PRINTFLIKEnn */
-extern int extern_in;		/* supports "LINT_EXTERNnn" */
+extern unsigned extern_in;	/* supports "LINT_EXTERNnn" */
 extern int do_tracking;		/* supports "-X" option */
 extern int exitlike_func;	/* supports noreturn-attribute */
-extern int in_include;		/* current include-level */
+extern unsigned in_include;	/* current include-level */
 extern int debug_trace;
 extern char base_file[];
 

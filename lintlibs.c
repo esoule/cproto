@@ -1,4 +1,4 @@
-/* $Id: lintlibs.c,v 4.10 2005/12/08 23:15:13 tom Exp $
+/* $Id: lintlibs.c,v 4.13 2008/11/20 00:56:00 tom Exp $
  *
  * C prototype/lint-library generator
  * These routines implement the semantic actions for lint libraries executed by
@@ -12,7 +12,7 @@
 
 #if OPT_LINTLIBRARY
 
-	int	in_include;
+	unsigned in_include;
 
 static	SymbolTable *include_list;
 static	SymbolTable *declared_list;
@@ -53,7 +53,7 @@ void
 put_char(FILE *outf, int c)
 {
 	static	char	s[] = "?";
-	s[0] = c;
+	s[0] = (char) c;
 	put_string(outf, s);
 }
 
@@ -129,8 +129,8 @@ strip_name(char *s)
 	static	char	GccLeaf[] = "/gcc-lib/";
 	static	char	IncLeaf[] = "/include/";
 	char *t;
-	register int	n;
-	register size_t	len;
+	unsigned	n;
+	unsigned	len;
 	int standard = FALSE;
 
 	for (n = 1; n < num_inc_dir; n++) {
@@ -161,21 +161,21 @@ strip_name(char *s)
 }
 #define	CUR_FILE	strip_name(cur_file_name())
 
-static int base_level;
+static unsigned base_level;
 static unsigned inc_depth = 0;
 static char **inc_stack = 0;
 
 static char *
-get_inc_stack(int n)
+get_inc_stack(unsigned n)
 {
-	return (n < 0 || n >= (int) inc_depth) ? 0 : inc_stack[n];
+	return (((int) n) < 0 || n >= inc_depth) ? 0 : inc_stack[n];
 }
 
 #ifdef	DEBUG
 static void
 dump_stack(char *tag)
 {
-	register int	j;
+	unsigned	j;
 	printf("/* stack%s:%s", tag, cur_file_name());
 	for (j = 0; j <= in_include; j++)
 		printf("\n\t%d%s:%s", j,
@@ -186,7 +186,7 @@ dump_stack(char *tag)
 #endif	/* DEBUG */
 
 static void
-free_inc_stack(int n)
+free_inc_stack(unsigned n)
 {
 	if (get_inc_stack(n) != 0) {
 		free(inc_stack[n]);
@@ -304,7 +304,7 @@ void
 track_in(void)
 {
 	static	char	old_file[MAX_TEXT_SIZE];	/* from last call */
-	auto	boolean	show = lintLibrary();
+	auto	int	show = lintLibrary();
 
 	if (!show && !do_tracking && !debug_trace)
 		return;
@@ -320,7 +320,7 @@ track_in(void)
 			InitTracking = TRUE;
 			/* yacc may omit first cpp-line! */
 			in_include =
-			base_level = !same_file(cur_file_name(), base_file);
+			base_level = (unsigned) !same_file(cur_file_name(), base_file);
 			make_inc_stack(0, base_file);
 		} else if (same_file(cur_file_name(), base_file)) {
 			flush_varargs();
@@ -347,14 +347,15 @@ track_in(void)
 		in_include = 0;	/* kludgy bison! */
 		(void)strcpy(old_file, cur_file_name());
 	} else if (!same_file(old_file, cur_file_name())) { /* continue/unnest ? */
-		int n, found;
+		unsigned n;
+		int found;
 		char *s = cur_file_name();
 #ifdef DEBUG
 		char temp[80];
 #endif
 
 		flush_varargs();
-		for (n = in_include, found = FALSE; n >= 0; n--) {
+		for (n = in_include, found = FALSE; (int) n >= 0; n--) {
 			if (same_file(get_inc_stack(n), s)) {
 				found = TRUE;
 				in_include--;
@@ -415,9 +416,9 @@ void add2implied_buf(char *s, int append)
 	implied_len += strlen(s);
 
 	if (implied_buf == 0)
-		*(implied_buf = malloc(implied_max = BUFSIZ)) = '\0';
+		*(implied_buf = (char *) malloc(implied_max = BUFSIZ)) = '\0';
 	if (implied_max < implied_len + 2)
-		implied_buf = realloc(implied_buf, implied_max += implied_len+2);
+		implied_buf = (char *) realloc(implied_buf, implied_max += implied_len+2);
 	if (!append)
 		*implied_buf = '\0';
 	(void)strcat(implied_buf, s);

@@ -1,4 +1,4 @@
-/* $Id: semantic.c,v 4.6 2005/08/21 14:44:05 tom Exp $
+/* $Id: semantic.c,v 4.9 2008/11/20 00:58:04 tom Exp $
  *
  * Semantic actions executed by the parser of the
  * C function prototype generator.
@@ -35,7 +35,7 @@ static int nestedParams;
 /* Initialize a new declaration specifier part.
  */
 void
-new_decl_spec (DeclSpec *decl_spec, char *text, long offset, int flags)
+new_decl_spec (DeclSpec *decl_spec, const char *text, long offset, int flags)
 {
 #if OPT_LINTLIBRARY
     if (lintLibrary()) {
@@ -45,7 +45,7 @@ new_decl_spec (DeclSpec *decl_spec, char *text, long offset, int flags)
 #endif
     decl_spec->text = xstrdup(text);
     decl_spec->begin = offset;
-    decl_spec->flags = flags;
+    decl_spec->flags = (unsigned short) flags;
 }
 
 /* Free storage used by a declaration specifier part.
@@ -65,7 +65,7 @@ concat_string (char *a, char *b)
 {
     char *result;
 
-    result = xmalloc(strlen(a) + strlen(b) + 2);
+    result = (char *) xmalloc(strlen(a) + strlen(b) + 2);
     strcpy(result, a);
     strcat(result, " ");
     strcat(result, b);
@@ -79,7 +79,7 @@ glue_strings (char *a, char *b)
 {
     char *result;
 
-    result = xmalloc(strlen(a) + strlen(b) + 2);
+    result = (char *) xmalloc(strlen(a) + strlen(b) + 2);
     strcpy(result, a);
     strcat(result, b);
     return result;
@@ -121,7 +121,7 @@ check_untagged (DeclSpec *decl_spec)
 /* Allocate and initialize a declarator.
  */
 Declarator *
-new_declarator (char *text, char *name, long offset)
+new_declarator (const char *text, const char *name, long offset)
 {
     Declarator *d;
 
@@ -226,8 +226,9 @@ free_parameter (Parameter *param)
 static boolean
 is_void_parameter (Parameter *p)
 {
-    return p == NULL || (strcmp(p->decl_spec.text, "void") == 0 &&
-     p->declarator->text[0] == '\0');
+    return (boolean) ((p == NULL) ||
+		       (strcmp(p->decl_spec.text, "void") == 0 &&
+		        p->declarator->text[0] == '\0'));
 }
 
 /* Initialize a list of function parameters.
@@ -433,7 +434,7 @@ int	commented)	/* comment-delimiters already from higher level */
 		if (!parenthesized) {
 		    if ((u = strchr(t, PAREN_L)) != 0) { /* e.g., "*%s()" */
 			t = p->declarator->text;
-			u = xmalloc(strlen(t) + 3);
+			u = (char *) xmalloc(strlen(t) + 3);
 			(void)sprintf(u, "(%s)", t);
 			p->declarator->text = u;
 			free(t);
@@ -763,7 +764,7 @@ gen_declarations (DeclSpec *decl_spec,	/* declaration specifier */
     int	saveNest = nestedParams;
 
 #if OPT_LINTLIBRARY
-    boolean	defines = (strchr(decl_spec->text, CURL_L) != 0);
+    boolean	defines = (boolean) (strchr(decl_spec->text, CURL_L) != 0);
     int		is_func;
 
     /* special treatment for -l, -T options */
@@ -1037,7 +1038,7 @@ gen_func_definition (DeclSpec *decl_spec, Declarator *declarator)
      */
     if ((diff = (ftell(cur_tmp_file()) - cur_begin_comment())) > 0) {
 	comment_len = (unsigned)diff;
-	*(comment = xmalloc(comment_len)) = '\0';
+	*(comment = (char *) xmalloc(comment_len)) = '\0';
 	fseek(cur_tmp_file(), cur_begin_comment(), 0);
 	fread(comment, sizeof(char), comment_len, cur_tmp_file());
     } else {
@@ -1053,7 +1054,7 @@ gen_func_definition (DeclSpec *decl_spec, Declarator *declarator)
 	params = &func_declarator->params;
 	n = (int)(params->end_comment - params->begin_comment);
 	if (n > 0) {
-	    *(params->comment = xmalloc((unsigned)(n+1))) = '\0';
+	    *(params->comment = (char *) xmalloc((unsigned)(n+1))) = '\0';
 	    fseek(cur_tmp_file(), params->begin_comment, 0);
 	    fread(params->comment, sizeof(char), (size_t)n, cur_tmp_file());
 	    params->comment[n] = '\0';
@@ -1064,7 +1065,7 @@ gen_func_definition (DeclSpec *decl_spec, Declarator *declarator)
 	for (p = func_declarator->params.first; p != NULL; p = p->next) {
 	    n = (int)(p->declarator->end_comment - p->declarator->begin_comment);
 	    if (n > 0) {
-	        *(p->comment = xmalloc((unsigned)n+1)) = '\0';
+	        *(p->comment = (char *) xmalloc((unsigned)n+1)) = '\0';
 	        fseek(cur_tmp_file(), p->declarator->begin_comment, 0);
 	        fread(p->comment, sizeof(char), (size_t)n, cur_tmp_file());
 	        p->comment[n] = '\0';
@@ -1089,7 +1090,7 @@ gen_func_definition (DeclSpec *decl_spec, Declarator *declarator)
 	/* Save the current function definition head. */
 	if ((diff = (cur_begin_comment() - decl_spec->begin)) > 0) {
 	    func_len = (unsigned)diff;
-	    cur_func = xmalloc(func_len);
+	    cur_func = (char *) xmalloc(func_len);
 	    fread(cur_func, sizeof(char), func_len, cur_tmp_file());
 	} else {
 	    cur_func = 0;

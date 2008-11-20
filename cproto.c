@@ -1,8 +1,8 @@
-/* $Id: cproto.c,v 4.17 2008/01/01 22:01:51 tom Exp $
+/* $Id: cproto.c,v 4.24 2008/11/20 01:38:23 tom Exp $
  *
  * C function prototype generator and function definition converter
  */
-#define VERSION "4.7f"
+#define VERSION "4.7g"
 
 #include <stdio.h>
 #include <ctype.h>
@@ -23,7 +23,7 @@ char *progname;
 /* Program options */
 
 /* If nonzero, output variables declared "extern" in include-files */
-int extern_in = 0;
+unsigned extern_in = 0;
 
 /* When TRUE, track the include-level (works with gcc, not some others) */
 #if OPT_LINTLIBRARY
@@ -98,7 +98,7 @@ FuncFormat fmt[] = {
 boolean quiet = FALSE;
 
 /* Include file directories */
-int num_inc_dir = 0;
+unsigned num_inc_dir = 0;
 char **inc_dir = 0;
 
 /* Run the C preprocessor */
@@ -107,6 +107,7 @@ char **inc_dir = 0;
 extern FILE *popen (const char *c, const char *m);
 # endif
 extern int pclose (FILE *p);
+static unsigned cpp_len;
 static char *cpp = CPP, *cpp_opt, *cpp_cmd;
 #endif
 
@@ -115,7 +116,7 @@ static char *cpp = CPP, *cpp_opt, *cpp_cmd;
  */
 #if !HAVE_LIBDMALLOC
 #ifdef NO_LEAKS
-void *xMalloc(unsigned n, char *f, int l)
+void *xMalloc(unsigned n, char *f GCC_UNUSED, int l GCC_UNUSED)
 #else
 void *xmalloc (unsigned n)
 #endif
@@ -141,7 +142,7 @@ void *xmalloc (unsigned n)
  */
 #if !HAVE_LIBDMALLOC
 #ifdef NO_LEAKS
-void *xRealloc(void *p, unsigned n, char *f, int l)
+void *xRealloc(void *p, unsigned n, char *f GCC_UNUSED, int l GCC_UNUSED)
 #else
 void *xrealloc (void *p, unsigned n)
 #endif
@@ -172,9 +173,9 @@ char *xstrdup (const char *src)
 #endif
 {
 #if defined(NO_LEAKS)
-    return strcpy(xMalloc(strlen(src)+1, f, l), src);
+    return strcpy((char *) xMalloc(strlen(src)+1, f, l), src);
 #else
-    return strcpy(xmalloc(strlen(src)+1), src);
+    return strcpy((char *) xmalloc(strlen(src)+1), src);
 #endif
 }
 #endif /* if !HAVE_LIBDMALLOC */
@@ -291,10 +292,9 @@ is_path_sep (int ch)
 char *
 trim_path_sep (char *s)
 {
-    int n;
+    unsigned n = strlen(s);
 
-    n = strlen(s);
-    if (n > 0) {
+    if (n != 0) {
 	if (is_path_sep(s[n-1]))
 	    s[n-1] = '\0';
     }
@@ -519,7 +519,7 @@ process_options (int *pargc, char ***pargv)
 #ifndef vms	/* this conflicts with use of foreign commands... */
     if ((s = getenv("CPROTO")) != NULL) {
 	parse_options(s, MAX_OPTIONS, &eargc, eargv);
-	nargv = (char **)xmalloc((eargc+argc+1)*sizeof(char *));
+	nargv = (char **)xmalloc(((unsigned)(eargc+argc+1))*sizeof(char *));
 	nargv[0] = argv[0];
 	nargc = 1;
 	for (i = 0; i < eargc; ++i)
@@ -544,9 +544,10 @@ process_options (int *pargc, char ***pargv)
     *(cpp_undefns = xmalloc(n+argc)) = '\0';
     n += 30;	/* for keywords */
 #endif
-    *(cpp_opt = xmalloc(n)) = '\0';
+    *(cpp_opt = (char *) xmalloc(n)) = '\0';
     n += (2 + strlen(CPP) + BUFSIZ);
-    *(cpp_cmd = xmalloc(n)) = '\0';
+    *(cpp_cmd = (char *) xmalloc(n)) = '\0';
+    cpp_len = n;
 #endif
 
     while ((c = getopt(argc, argv, ALL_OPTIONS)) != EOF) {
@@ -571,7 +572,7 @@ process_options (int *pargc, char ***pargv)
 	    break;
 #else	/* UNIX, etc. */
 #ifdef CPP
-	    tmp = xmalloc(quote_length(optarg) + 10);
+	    tmp = (char *) xmalloc(quote_length(optarg) + 10);
 	    sprintf(tmp, " -%c%s", c, optarg);
 	    strcat(cpp_opt, quote_string(tmp));
 	    free(tmp);
@@ -614,17 +615,17 @@ process_options (int *pargc, char ***pargv)
 		((c == 'F') ? FMT_FUNC : FMT_PROTO);
 
 	    fmt[i].decl_spec_prefix = s;
-	    while (*s != '\0' && isascii(UCH(*s)) && !isalnum(UCH(*s))) ++s;
+	    while (*s != '\0' && !isalnum(UCH(*s))) ++s;
 	    if (*s == '\0') usage();
 	    *s++ = '\0';
-	    while (*s != '\0' && isascii(UCH(*s)) && isalnum(UCH(*s))) ++s;
+	    while (*s != '\0' && isalnum(UCH(*s))) ++s;
 	    if (*s == '\0') usage();
 
 	    fmt[i].declarator_prefix = s;
-	    while (*s != '\0' && isascii(UCH(*s)) && !isalnum(UCH(*s))) ++s;
+	    while (*s != '\0' && !isalnum(UCH(*s))) ++s;
 	    if (*s == '\0') usage();
 	    *s++ = '\0';
-	    while (*s != '\0' && isascii(UCH(*s)) && isalnum(UCH(*s))) ++s;
+	    while (*s != '\0' && isalnum(UCH(*s))) ++s;
 	    if (*s == '\0') usage();
 
 	    fmt[i].declarator_suffix = s;
@@ -633,17 +634,17 @@ process_options (int *pargc, char ***pargv)
 	    *s++ = '\0';
 
 	    fmt[i].first_param_prefix = s;
-	    while (*s != '\0' && isascii(UCH(*s)) && !isalnum(UCH(*s))) ++s;
+	    while (*s != '\0' && !isalnum(UCH(*s))) ++s;
 	    if (*s == '\0') usage();
 	    *s++ = '\0';
 	    while (*s != '\0' && *s != ',') ++s;
 	    if (*s == '\0') usage();
 
 	    fmt[i].middle_param_prefix = ++s;
-	    while (*s != '\0' && isascii(UCH(*s)) && !isalnum(UCH(*s))) ++s;
+	    while (*s != '\0' && !isalnum(UCH(*s))) ++s;
 	    if (*s == '\0') usage();
 	    *s++ = '\0';
-	    while (*s != '\0' && isascii(UCH(*s)) && isalnum(UCH(*s))) ++s;
+	    while (*s != '\0' && isalnum(UCH(*s))) ++s;
 	    if (*s == '\0') usage();
 
 	    fmt[i].last_param_suffix = s;
@@ -713,9 +714,9 @@ process_options (int *pargc, char ***pargv)
 # endif
 	    break;
 	case 'X':
-	    extern_in = atoi(optarg);
+	    extern_in = (unsigned) atoi(optarg);
 	    do_tracking = TRUE;
-	    if (extern_in < 0)
+	    if ((int) extern_in < 0)
 		usage();
 	    break;
 #endif	/* OPT_LINTLIBRARY */
@@ -773,7 +774,7 @@ main (int argc, char *argv[])
 	}
     }
 #else
-    for (i = strlen(progname)-1; i >= 0; i--) {
+    for (i = (int)strlen(progname)-1; i >= 0; i--) {
 	if (is_path_sep(progname[i])) {
 	    progname += (i + 1);
 	    break;
@@ -838,7 +839,7 @@ main (int argc, char *argv[])
 	    char temp[BUFSIZ];
 	    char *s = strcpy(temp, argv[i]);
 #  if HAVE_LINK
-	    int len = strlen(temp);
+	    int len = (int)strlen(temp);
 	    s += len - 1;
 	    if ((len > 2)
 	     && (s[-1] == '.')
@@ -871,7 +872,13 @@ main (int argc, char *argv[])
 		system(cpp_cmd);
 		inf = fopen(temp, "r");
 #else
+		if (cpp_len < (strlen(cpp) + strlen(cpp_opt) + strlen(FileName) + 100)) {
+			cpp_len = (strlen(cpp) + strlen(cpp_opt) + strlen(FileName) + 100);
+			cpp_cmd = realloc(cpp_cmd, cpp_len);
+		}
 		sprintf(cpp_cmd, "%s%s %s", cpp, cpp_opt, FileName);
+		if (quiet)
+			strcat(cpp_cmd, " 2>/dev/null");
 		inf = popen(cpp_cmd, "r");
 #endif
 		if (inf == NULL || ferror(inf) || feof(inf)) {
@@ -930,7 +937,7 @@ main (int argc, char *argv[])
 #  endif
 # endif
     if (inc_dir != 0) {
-	while (--num_inc_dir >= 0) {
+	while (num_inc_dir-- > 0) {
 	    free(inc_dir[num_inc_dir]);
 	}
 	free(inc_dir);

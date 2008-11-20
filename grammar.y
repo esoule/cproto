@@ -1,4 +1,4 @@
-/* $Id: grammar.y,v 4.13 2008/01/01 22:53:01 tom Exp $
+/* $Id: grammar.y,v 4.15 2008/11/20 01:00:19 tom Exp $
  *
  * yacc grammar for C function prototype generator
  * This was derived from the grammar in Appendix A of
@@ -133,9 +133,7 @@ static int return_val,	/* nonzero on BRACES iff return-expression found */
 	   returned_at;	/* marker for token-number to set 'return_val' */
 
 #if OPT_LINTLIBRARY
-static char *dft_decl_spec (void);
-
-static char *
+static const char *
 dft_decl_spec (void)
 {
     return (lintLibrary() && !return_val) ? "void" : "int";
@@ -897,7 +895,7 @@ yaccError (char *msg)
 void
 init_parser (void)
 {
-    static char *keywords[] = {
+    static const char *keywords[] = {
 	"const",
 	"restrict",
 	"volatile",
