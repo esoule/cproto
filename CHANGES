@@ -1,4 +1,10 @@
--- $Id: CHANGES,v 4.22 2008/11/20 01:35:06 tom Exp $
+-- $Id: CHANGES,v 4.23 2009/09/03 20:37:57 tom Exp $
+
+2009/9/3
+Version 4.7h
+- update configure macros CF_ADD_CFLAGS CF_GCC_ATTRIBUTES CF_GCC_WARNINGS
+  CF_XOPEN_SOURCE
+- update config.guess, config.sub
 
 2008/11/19
 Version 4.7g
@@ -9,7 +15,7 @@ Version 4.7g
 - use configure macro CF_XOPEN_SOURCE macro to make mkstemp() prototyped on
   Linux.
 - remove isascii() usage.
-- code cleanup, to remove K&R relicts.
+- code cleanup, to remove K&R relics.
 - update config.guess, config.sub
 
 Version 4.7f
