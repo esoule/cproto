@@ -1,13 +1,27 @@
--- $Id: CHANGES,v 4.23 2009/09/03 20:37:57 tom Exp $
+-- $Id: CHANGES,v 4.31 2010/07/14 09:42:59 tom Exp $
 
-2009/9/3
-Version 4.7h
-- update configure macros CF_ADD_CFLAGS CF_GCC_ATTRIBUTES CF_GCC_WARNINGS
+2010/07/14 (4.7i)
+- escape dashes used in manpage, to work with groff (patch by Kenneth
+  Pronovici) 
+- add RPM and Debian build scripts, for testing.
+- add configure checks for ctags and lint program.
+- fix strict compiler warnings, e.g., using const.
+- support DESTDIR variable in makefile.
+- drop mkdirs.sh, use "mkdir -p"
+- several improvements to configure macros
+  - quoted ifelse() params
+  - distinguish Darwin 9 from previous releases
+  - ignore stderr in check for gcc version, to work with c89 wrapper.
+- use consistent date and formatting in the CHANGES file, for processing
+  contributor's information using a script.
+- update config.guess, config.sub
+
+2009/09/3 (4.7h)
+- updated configure macros CF_ADD_CFLAGS CF_GCC_ATTRIBUTES CF_GCC_WARNINGS
   CF_XOPEN_SOURCE
 - update config.guess, config.sub
 
-2008/11/19
-Version 4.7g
+2008/11/19 (4.7g)
 - modify cpp command to redirect stderr to /dev/null if -q option is given,
   for consistency with the non-cpp mode (report by Nicolas Limare).
   https://bugs.launchpad.net/ubuntu/+source/cproto/+bug/275248
@@ -18,8 +32,7 @@ Version 4.7g
 - code cleanup, to remove K&R relics.
 - update config.guess, config.sub
 
-Version 4.7f
-2008/1/1
+2008/01/1 (4.7f)
 - add symbol for __gnuc_va_list
 - add some data for c99 syntax to test-cases, e.g., long long.
 - review/fix some additional places where need_temp() call is needed.
@@ -30,8 +43,7 @@ Version 4.7f
 - update config.guess, config.sub
 - rename install.sh to install-sh
 
-Version 4.7e
-2005/12/8
+2005/12/8 (4.7e)
 - eliminate some fixed limits on buffer sizes (prompted by FreeBSD port).
 - eliminate fixed limit on include nesting.
 - use configure check for mkstemp(), use that function in preference to
@@ -40,8 +52,7 @@ Version 4.7e
 - improve configure check for gcc version, from ncurses.
 - update config.guess, config.sub
 
-Version 4.7d
-2005/8/21
+2005/08/21 (4.7d)
 - modified configure script and makefile to work with cygwin
 - fix configure check for yacc errors broken by 4.7c changes.
 - change fixed buf[] in grammar.y to an allocated buffer temp_buf[].
@@ -53,8 +64,7 @@ Version 4.7d
 - add configure check for Intel compiler.
 - modify filename comparison for lint-library to ignore leading "./".
 
-Version 4.7c
-2004/3/25
+2004/03/25 (4.7c)
 - fix a couple of places where valgrind reported a sscanf's result was not
   always initialized.
 - modify behavior of "-X" option so it does not cause preprocessor lines to
@@ -66,20 +76,16 @@ Version 4.7c
   the include-file tracking, this option can also be enabled (or disabled)
   (discussion with Kenneth Pronovici, Bob Van der Poel).
 - require an ANSI C compiler for building.
-- update configure script, using autoconf 2.52 + patch, along with macros from
+- updated configure script, using autoconf 2.52 + patch, along with macros from
   vile/lynx/etc.
 
-Version 4.7b
-
-2004/3/9
+2004/03/9 (4.7b)
 - added new -X option to limit the levels of include-files from which an
   extern can come (Debian #235824).
 - added new -i option to support inline function prototypes (Debian #228801,
   patch by Kenneth Pronovici).
 
-Version 4.7a
-
-2003/4/5
+2003/04/5 (4.7a)
 
 - add definition of YYFLAG, to enable the error-reporting code with bison 1.875
 - add definition of YYSTYPE, to allow this to build with recent (aka "broken")
@@ -91,12 +97,10 @@ Version 4.7a
   unexpected results.
 - resync with version 4.7 at http://cproto.sourceforge.net/
 
-2003/1/5
+2003/01/05
 - add gcc-specific __builtin_va_list keyword.
 
-Version 4.6e
-
-2002/2/25
+2002/02/25 (4.6e)
 - correct length allocated for filename in include_file(), which was not big
   enough if the $CPROTO environment variable was corrupted.  From report by
   <Sweasel18@aol.com>, using sharefuzz:
@@ -108,14 +112,10 @@ Version 4.6e
 - remove makefile rules to make shar files (comp.sources.misc is long gone).
 - stop using changequote(), workaround for bugs in autoconf 2.5x
 
-Version 4.7
-
-2000/11/9
+2000/11/9 (4.7)
 - Report source file and line number in error messages in gcc-style format.
 
-Version 4.6d
-
-2000/8/10
+2000/08/10 (4.6d)
 - use newer versions of mkdirs.sh and install.sh
 - regenerate configure script with autoconf 2.13
 - restructure aclocal.m4
@@ -123,41 +123,38 @@ Version 4.6d
   independently of $(prefix) and $(exec_prefix) (patch by Carsten Leonhardt
   <leo@debian.org>).
 
-Version 4.6c
-
-2000/7/8
+2000/07/8 (4.6c)
 - add a clause to handle "__extension__" before extern declarations.
   (report by Bob van der Poel <bvdpoel@uniserve.com>)
 
-Version 4.6b
-
-1999/12/27
+1999/12/27 (4.6b)
 - correct check for size of vec[] array in yaccExpected(), broken in 4.6a
   changes.
   (report by Wolfgang Wander)
+
 1999/12/19
 - add keywords "restrict", "_Bool", "_Complex", "_Imaginary" based on c9x
   draft.
 - add keywords "__restrict__" and "__restrict", for gcc.
   (report by Wolfgang Wander <wwc@rentec.com>)
 
-Version 4.6a
-
-1999/12/14
+1999/12/14 (4.6a)
 - change vec[] array in yaccExpected() to be dynamically allocated.  It was a
   fixed-size (10 entries) array before.  Also fix problem reported by Wolfgang
   Wander <wwc@rentec.com>, which is that if the array were empty, it was passed
   to qsort() with a zero-size, causing a core dump.
 - add to syntax.c & corresponding test-cases the typedef/identifier example.
+
 1999/10/21
 - allow identifiers to be the same as typedef names, handle this case:
-  typedef int badStyle; 
-  void badFunc(int *badStyle) { } 
+  typedef int badStyle;
+  void badFunc(int *badStyle) { }
   (reported by Paul Haas <paulh@iware.com>)
-1999/1/3
+
+1999/01/03
 - add '__extension__' keyword
 
-Version 4.6
+1998/01/21 (4.6)
 
 - Since cproto is no longer being distributed on USENET in shar file format,
   the patchlev.h and MANIFEST files have been removed.
@@ -186,7 +183,7 @@ Version 4.6
 
 - modified ifdefs to avoid using predefined 'unix' (not defined on AIX or CLIX)
 
-Patchlevel 5 (April 1996)
+1996/04/15 (Patchlevel 5)
 
 - corrected instance of fclose on a file pointer after pclose was done (found
   with Electric Fence).
@@ -206,9 +203,9 @@ Patchlevel 5 (April 1996)
 - added keywords to work with gcc 2.7.0
 
 - corrected unresolved references to flush_varargs() when OPT_LINTLIBRARY
-  is not defined                                                         
+  is not defined
 
-Patchlevel 4 (August 1995)
+1995/08/24 (Patchlevel 4)
 
 - Added -S option to only output static declarations.
 
@@ -233,7 +230,7 @@ Patchlevel 4 (August 1995)
   the lint-library option) so that it recognizes the conventional include
   directory created by a GCC install.
 
-Patchlevel 3 (January 1995)
+1995/01/06 (Patchlevel 3)
 
 - check for a special case in lint-library generation, i.e., prototype
   arguments of the form "*()", which need more parentheses for SunOS's lint.
@@ -250,7 +247,7 @@ Patchlevel 3 (January 1995)
 
 - use 'sed' rather than 'flip' to apply trailing CR's to MS-DOS scripts.
 
-Patchlevel 2 (October 1994)
+1994/10/26 (Patchlevel 2)
 
 - modified grammar to recognize C++ ref-variables (i.e., '&' as a prefix to
   identifiers at the top lexical level).  Lint libraries are formatted without
@@ -269,7 +266,7 @@ Patchlevel 2 (October 1994)
 
 - don't use "#elif" preprocessor control; not all systems support it.
 
-Patchlevel 1 (October 1994)
+1994/10/25 (Patchlevel 1)
 
 - Added testing scripts for MS-DOS and VMS.
 
@@ -281,7 +278,7 @@ Patchlevel 1 (October 1994)
 - Fix: The system.h file should define EXIT_SUCCESS and EXIT_FAILURE
   regardless of the presence of <stdlib.h>.
 
-Patchlevel 0 (dickey, September 1994)
+1994/09/24 (Patchlevel 0, dickey)
 
 - corrected two malloc-defects in lint library generation (one place where
   generated parameter name was copied rather than allocated, and another memory
@@ -321,7 +318,7 @@ Patchlevel 0 (dickey, September 1994)
 
 Version 3
 
-Patchlevel 9 (dickey, August 1994)
+1994/08/31 (Patchlevel 9, dickey)
 
 - use 'autoconf' to make a UNIX configure-script.
 
@@ -377,7 +374,7 @@ Patchlevel 9 (dickey, August 1994)
 
 - tested for memory leaks with dbmalloc (on Linux).
 
-Patchlevel 8 (internal: dickey/cthuang, June 1993)
+1993/06/09 (Patchlevel 8, internal: dickey/cthuang)
 
 - added files 'lintlibs.c' and 'strkey.c'
 
@@ -421,7 +418,7 @@ Patchlevel 8 (internal: dickey/cthuang, June 1993)
 
 - linted some xmalloc calls using ALLOC macro.
 
-Patchlevel 7
+1993/06/01 (Patchlevel 7, cthuang)
 
 - Fix: The processing of string literals is now more robust.
 
@@ -538,7 +535,7 @@ Patchlevel 3
 - Added the -q option to stop the program from outputting error messages
   when it cannot read the file specified in an #include directive.
 - Made the yacc specification compatible with UNIX SYSVR4 yacc.
-  
+
 Patchlevel 2
 
 - Fix: The function definition conversion may produce a mangled function

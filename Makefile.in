@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 4.13 2008/11/20 01:44:31 tom Exp $
+# $Id: Makefile.in,v 4.16 2010/07/12 00:43:24 tom Exp $
 #
 # UNIX template-makefile for C prototype generator
 
@@ -15,6 +15,7 @@ CPP		= @CPP@
 LEX		= @LEX@
 YACC		= @YACC@
 LINT		= @LINT@
+CTAGS		= @CTAGS@
 
 INSTALL		= @INSTALL@
 INSTALL_PROGRAM	= @INSTALL_PROGRAM@
@@ -23,15 +24,18 @@ INSTALL_DATA	= @INSTALL_DATA@
 DEFINES		=
 EXTRA_CFLAGS	= @EXTRA_CFLAGS@
 CPPFLAGS	= -I. -I$(srcdir) $(DEFINES) -DHAVE_CONFIG_H @CPPFLAGS@
-CFLAGS		= @CFLAGS@ $(CPPFLAGS) $(EXTRA_CFLAGS)
+CFLAGS		= @CFLAGS@ $(EXTRA_CFLAGS)
 LIBS		= @LIBS@ @LEXLIB@
 
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
 
 bindir		= @bindir@
-mandir		= @mandir@/man1
+mandir		= @mandir@
 manext		= 1
+
+BINDIR		= $(DESTDIR)$(bindir)
+MANDIR		= $(DESTDIR)$(mandir)/man$(manext)
 
 x		= @EXEEXT@
 o		= .@OBJEXT@
@@ -71,7 +75,6 @@ C_FILES = \
 	symbol.c
 
 AUX_FILES = \
-	mkdirs.sh \
 	lex.l \
 	grammar.y
 
@@ -87,19 +90,19 @@ SOURCES = $(DOC_FILES) $(MAK_FILES) $(H_FILES) $(C_FILES) $(AUX_FILES)
 all : $(PROG) # $(THIS).man
 
 install: all installdirs
-	$(INSTALL_PROGRAM) $(PROG) $(bindir)/$(PROG)
-	- $(INSTALL_DATA) $(srcdir)/$(THIS).1 $(mandir)/$(THIS).$(manext)
+	$(INSTALL_PROGRAM) $(PROG) $(BINDIR)/$(PROG)
+	- $(INSTALL_DATA) $(srcdir)/$(THIS).1 $(MANDIR)/$(THIS).$(manext)
 
 installdirs:
-	$(SHELL) ${srcdir}/mkdirs.sh $(bindir)
-	- $(SHELL) ${srcdir}/mkdirs.sh $(mandir)
+	mkdir -p $(BINDIR)
+	- mkdir -p $(MANDIR)
 
 uninstall:
-	- rm -f $(bindir)/$(PROG) $(mandir)/$(THIS).$(manext)
+	- rm -f $(BINDIR)/$(PROG) $(MANDIR)/$(THIS).$(manext)
 
 .c$o:
 	@RULE_CC@
-	@ECHO_CC@$(CC) -c $(CFLAGS) $<
+	@ECHO_CC@$(CC) -c $(CFLAGS) $(CPPFLAGS) $<
 
 $(PROG) : $(OBJECTS)
 	@ECHO_LD@$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $(OBJECTS) $(LIBS)
@@ -158,7 +161,7 @@ default.h: $(C_FILES) lex.yy.c
 	./$(PROG) -e -v -m -M ARGS -d $(DEFINES) $(C_FILES) grammar.y >$@
 
 lint: $(C_FILES) $(JUNK)
-	$(LINT) $(CPPFLAGS) -lyacc $(C_FILES) y.tab.c >$@.out
+	$(LINT) $(CPPFLAGS) $(C_FILES) y.tab.c >$@.out
 
 llib: $(C_FILES) $(JUNK)
 	./$(PROG) -l $(CPPFLAGS) $(C_FILES) y.tab.c >$@.out
@@ -167,7 +170,7 @@ self: $(C_FILES) $(JUNK)
 	./$(PROG) $(CPPFLAGS) $(C_FILES) y.tab.c >$@.out
 
 tags: $(H_FILES) $(C_FILES) $(AUX_FILES)
-	ctags $(C_FILES) $(AUX_FILES) $(H_FILES)
+	$(CTAGS) $(C_FILES) $(AUX_FILES) $(H_FILES)
 
 depend:
 	makedepend -- $(CPPFLAGS) -- $(C_FILES) y.tab.c

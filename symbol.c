@@ -1,4 +1,4 @@
-/* $Id: symbol.c,v 4.5 2008/08/28 00:38:36 tom Exp $
+/* $Id: symbol.c,v 4.7 2010/07/14 09:57:37 tom Exp $
  *
  * Implements a symbol table abstract data type.
  */
@@ -10,7 +10,7 @@
  * Return a pointer to the symbol table or NULL if an error occurs.
  */
 SymbolTable *
-new_symbol_table (void)
+new_symbol_table(void)
 {
     SymbolTable *symtab;
     int i;
@@ -22,11 +22,10 @@ new_symbol_table (void)
     return symtab;
 }
 
-
 /* Free the memory allocated to the symbol table.
  */
 void
-free_symbol_table (SymbolTable *symtab)
+free_symbol_table(SymbolTable * symtab)
 {
     int i;
     Symbol *sym, *next;
@@ -35,8 +34,10 @@ free_symbol_table (SymbolTable *symtab)
 	sym = symtab->bucket[i];
 	while (sym != NULL) {
 	    next = sym->next;
-	    if (sym->name  != 0) free(sym->name);
-	    if (sym->value != 0) free(sym->value);
+	    if (sym->name != 0)
+		free(sym->name);
+	    if (sym->value != 0)
+		free(sym->value);
 	    free(sym);
 	    sym = next;
 	}
@@ -44,11 +45,10 @@ free_symbol_table (SymbolTable *symtab)
     free(symtab);
 }
 
-
 /* This is a simple hash function mapping a symbol name to a hash bucket. */
 
 static unsigned
-hash (const char *name)
+hash(const char *name)
 {
     const char *s;
     unsigned h;
@@ -56,16 +56,15 @@ hash (const char *name)
     h = 0;
     s = name;
     while (*s != '\0')
-	h = (h << 1) ^ *s++;
+	h = (h << 1) ^ (unsigned char) (*s++);
     return h % SYM_MAX_HASH;
 }
-
 
 /* Search the list of symbols <list> for the symbol <name>.
  * Return a pointer to the symbol or NULL if not found.
  */
 static Symbol *
-search_symbol_list (Symbol *list, const char *name)
+search_symbol_list(Symbol * list, const char *name)
 {
     Symbol *sym;
 
@@ -76,27 +75,25 @@ search_symbol_list (Symbol *list, const char *name)
     return NULL;
 }
 
-
 /* Look for symbol <name> in symbol table <symtab>.
  * Return a pointer to the symbol or NULL if not found.
  */
 Symbol *
-find_symbol (SymbolTable *symtab, const char *name)
+find_symbol(SymbolTable * symtab, const char *name)
 {
     return search_symbol_list(symtab->bucket[hash(name)], name);
 }
-
 
 /* If the symbol <name> does not already exist in symbol table <symtab>,
  * then add the symbol to the symbol table.
  * Return a pointer to the symbol.
  */
 Symbol *
-new_symbol (
-SymbolTable *symtab,	/* symbol table */
-const char *name,	/* symbol name */
-const char *value,	/* symbol value */
-int flags)		/* symbol attributes */
+new_symbol(
+	      SymbolTable * symtab,	/* symbol table */
+	      const char *name,	/* symbol name */
+	      const char *value,	/* symbol value */
+	      int flags)	/* symbol attributes */
 {
     Symbol *sym;
     unsigned i;

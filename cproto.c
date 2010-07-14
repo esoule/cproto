@@ -1,8 +1,8 @@
-/* $Id: cproto.c,v 4.25 2009/09/04 00:47:21 tom Exp $
+/* $Id: cproto.c,v 4.30 2010/07/14 09:55:17 tom Exp $
  *
  * C function prototype generator and function definition converter
  */
-#define VERSION "4.7h"
+#define VERSION "4.7i"
 
 #include <stdio.h>
 #include <ctype.h>
@@ -12,7 +12,7 @@
 #if HAVE_GETOPT_H
 #include <getopt.h>
 #else
-extern int getopt (int argc, char *const *argv, const char *shortopts);
+extern int getopt(int argc, char *const *argv, const char *shortopts);
 extern char *optarg;
 extern int optind;
 #endif
@@ -68,7 +68,7 @@ FuncDefStyle func_style = FUNC_UNKNOWN;
 boolean proto_macro = FALSE;
 
 /* Name of macro to guard prototypes */
-char *macro_name = "P_";
+const char *macro_name = "P_";
 
 /* If TRUE, output prototype macro definition */
 boolean define_macro = TRUE;
@@ -80,18 +80,19 @@ boolean proto_comments = FALSE;
 boolean file_comments = TRUE;
 
 /* Conditional compilation directive output in front of function definitions */
-char *func_directive = "#ifdef ANSI_FUNC";
+const char *func_directive = "#ifdef ANSI_FUNC";
 
 /* Output formats for function declarators */
-FuncFormat fmt[] = {
+FuncFormat fmt[] =
+{
     /* miscellaneous function declarator */
-    { "", " ", "", "", " ", "" },
+    {"", " ", "", "", " ", ""},
     /* prototype */
-    { "", " ", "", "", " ", "" },
+    {"", " ", "", "", " ", ""},
     /* function definition */
-    { "", "\n", " ", "", " ", "" },
+    {"", "\n", " ", "", " ", ""},
     /* function definition with parameter comments */
-    { "", "\n", " ", "\n    ", "\n    ", "\n" },
+    {"", "\n", " ", "\n    ", "\n    ", "\n"},
 };
 
 /* If TRUE, don't output message if unable to read an include file */
@@ -104,11 +105,13 @@ char **inc_dir = 0;
 /* Run the C preprocessor */
 #ifdef CPP
 # if !HAVE_POPEN_PROTOTYPE
-extern FILE *popen (const char *c, const char *m);
+extern FILE *popen(const char *c, const char *m);
 # endif
-extern int pclose (FILE *p);
-static unsigned cpp_len;
-static char *cpp = CPP, *cpp_opt, *cpp_cmd;
+extern int pclose(FILE *p);
+static size_t cpp_len;
+static const char *cpp = CPP;
+static char *cpp_opt;
+static char *cpp_cmd;
 #endif
 
 /* Try to allocate some memory.
@@ -116,9 +119,11 @@ static char *cpp = CPP, *cpp_opt, *cpp_cmd;
  */
 #if !HAVE_LIBDMALLOC
 #ifdef NO_LEAKS
-void *xMalloc(unsigned n, char *f GCC_UNUSED, int l GCC_UNUSED)
+void *
+xMalloc(size_t n, char *f GCC_UNUSED, int l GCC_UNUSED)
 #else
-void *xmalloc (unsigned n)
+void *
+xmalloc(size_t n)
 #endif
 {
     void *p;
@@ -129,8 +134,8 @@ void *xmalloc (unsigned n)
 #endif
 
     if (p == NULL) {
-	fprintf(stderr, "%s: out of memory (cannot allocate %u bytes)\n",
-		progname, n);
+	fprintf(stderr, "%s: out of memory (cannot allocate %lu bytes)\n",
+		progname, (unsigned long) n);
 	exit(EXIT_FAILURE);
     }
     return p;
@@ -142,9 +147,11 @@ void *xmalloc (unsigned n)
  */
 #if !HAVE_LIBDMALLOC
 #ifdef NO_LEAKS
-void *xRealloc(void *p, unsigned n, char *f GCC_UNUSED, int l GCC_UNUSED)
+void *
+xRealloc(void *p, size_t n, char *f GCC_UNUSED, int l GCC_UNUSED)
 #else
-void *xrealloc (void *p, unsigned n)
+void *
+xrealloc(void *p, size_t n)
 #endif
 {
 #if HAVE_LIBDBMALLOC
@@ -154,8 +161,8 @@ void *xrealloc (void *p, unsigned n)
 #endif
 
     if (p == NULL) {
-	fprintf(stderr, "%s: out of memory (cannot allocate %u bytes)\n",
-		progname, n);
+	fprintf(stderr, "%s: out of memory (cannot allocate %lu bytes)\n",
+		progname, (unsigned long) n);
 	exit(EXIT_FAILURE);
     }
     return p;
@@ -167,15 +174,17 @@ void *xrealloc (void *p, unsigned n)
  */
 #if !HAVE_LIBDMALLOC
 #ifdef NO_LEAKS
-char *xStrdup(const char *src, char *f, int l)
+char *
+xStrdup(const char *src, char *f, int l)
 #else
-char *xstrdup (const char *src)
+char *
+xstrdup(const char *src)
 #endif
 {
 #if defined(NO_LEAKS)
-    return strcpy((char *) xMalloc(strlen(src)+1, f, l), src);
+    return strcpy((char *) xMalloc(strlen(src) + 1, f, l), src);
 #else
-    return strcpy((char *) xmalloc(strlen(src)+1), src);
+    return strcpy((char *) xmalloc(strlen(src) + 1), src);
 #endif
 }
 #endif /* if !HAVE_LIBDMALLOC */
@@ -183,7 +192,7 @@ char *xstrdup (const char *src)
 /* Output the current source file name and line number.
  */
 void
-put_error (void)
+put_error(void)
 {
     fprintf(stderr, "%s:%u: ", cur_file_name(), cur_line_num());
 }
@@ -191,7 +200,7 @@ put_error (void)
 /* Scan for options from a string.
  */
 static void
-parse_options (char *src, int maxargc, int *pargc, char **argv)
+parse_options(char *src, int maxargc, int *pargc, char **argv)
 {
     char *g, *p, c;
     int argc;
@@ -240,7 +249,7 @@ parse_options (char *src, int maxargc, int *pargc, char **argv)
  * This function knows only a few escape sequences.
  */
 static char *
-escape_string (char *src)
+escape_string(char *src)
 {
     char *result, *get, *put;
 
@@ -277,7 +286,7 @@ escape_string (char *src)
 /* Returns true iff the character is a path leaf separator
  */
 int
-is_path_sep (int ch)
+is_path_sep(int ch)
 {
 #if defined(MSDOS) || defined(OS2)
     return ch == '/' || ch == '\\';
@@ -290,13 +299,13 @@ is_path_sep (int ch)
  * Return a pointer to the string.
  */
 char *
-trim_path_sep (char *s)
+trim_path_sep(char *s)
 {
-    unsigned n = strlen(s);
+    size_t n = strlen(s);
 
     if (n != 0) {
-	if (is_path_sep(s[n-1]))
-	    s[n-1] = '\0';
+	if (is_path_sep(s[n - 1]))
+	    s[n - 1] = '\0';
     }
     return s;
 }
@@ -304,7 +313,7 @@ trim_path_sep (char *s)
 /* Output usage message and exit.
  */
 static void
-usage (void)
+usage(void)
 {
     fprintf(stderr, "usage: %s [ option ... ] [ file ... ]\n", progname);
     fputs("Options:\n", stderr);
@@ -353,17 +362,17 @@ usage (void)
  * are the last.  Other -I options are inserted in order between the two.
  */
 static void
-add_inc_dir (char *src)
+add_inc_dir(const char *src)
 {
-    unsigned have = CHUNK(num_inc_dir);
-    unsigned need = CHUNK(num_inc_dir + 1);
-    unsigned used = (need * sizeof(char *));
+    size_t have = CHUNK(num_inc_dir);
+    size_t need = CHUNK(num_inc_dir + 1);
+    size_t used = (need * sizeof(char *));
     char *save;
 
     if (inc_dir == 0) {
-	inc_dir = (char **)malloc(used);
+	inc_dir = (char **) malloc(used);
     } else if (have != need) {
-	inc_dir = (char **)realloc(inc_dir, used);
+	inc_dir = (char **) realloc(inc_dir, used);
     }
 
     switch (num_inc_dir) {
@@ -381,9 +390,9 @@ add_inc_dir (char *src)
 }
 
 #ifdef	vms
-static	char	*cpp_defines;
-static	char	*cpp_include;
-static	char	*cpp_undefns;
+static char *cpp_defines;
+static char *cpp_include;
+static char *cpp_undefns;
 
 static void
 add2list(char *dst, char *src)
@@ -399,7 +408,7 @@ add_option(char *keyword, char *src)
     if (*src)
 	sprintf(cpp_opt + strlen(cpp_opt), " /%s=(%s)", keyword, src);
 }
-#endif	/* vms */
+#endif /* vms */
 
 #ifdef QUOTE_POPEN_ARGS
 
@@ -410,15 +419,15 @@ add_option(char *keyword, char *src)
 #define QUOTECHARS "\"\'\t\n "
 
 static int
-quote_length (char *s)
+quote_length(char *s)
 {
     int len = strlen(s);
 
-    if (strpbrk(s, QUOTECHARS))  {
+    if (strpbrk(s, QUOTECHARS)) {
 	len += 2;
 	while (*s)
 	    if (*s++ == '\'')
-		len += 4; /* replace ' with '"'"' (ick!) */
+		len += 4;	/* replace ' with '"'"' (ick!) */
     }
     return len;
 }
@@ -427,12 +436,12 @@ quote_length (char *s)
  * /bin/sh.
  */
 static char *
-quote_string (char *s)
+quote_string(char *s)
 {
-    if (strpbrk(s, QUOTECHARS))  {
+    if (strpbrk(s, QUOTECHARS)) {
 	char *src = s;
 	char *dup, *dup_orig;
-	
+
 	dup = dup_orig = xstrdup(s);
 
 	while (isspace(*src))
@@ -448,7 +457,7 @@ quote_string (char *s)
 		*src++ = '\'';
 		dup++;
 	    } else {
-	        *src++ = *dup++;
+		*src++ = *dup++;
 	    }
 	}
 
@@ -462,7 +471,7 @@ quote_string (char *s)
 #else
 #define	quote_length(s) strlen(s)
 #define quote_string(s)	(s)
-#endif /*QUOTE_POPEN_ARGS*/
+#endif /*QUOTE_POPEN_ARGS */
 
 #define MAX_OPTIONS 40
 
@@ -501,14 +510,14 @@ x\
 /* Process the command line options.
  */
 static void
-process_options (int *pargc, char ***pargv)
+process_options(int *pargc, char ***pargv)
 {
     int argc, eargc, nargc;
     char **argv, *eargv[MAX_OPTIONS], **nargv;
     int i, c;
     char *s;
 #if defined(CPP)
-    unsigned n;
+    size_t n;
 #endif
 #if defined(CPP) && !defined(vms)
     char *tmp;
@@ -516,10 +525,10 @@ process_options (int *pargc, char ***pargv)
 
     argc = *pargc;
     argv = *pargv;
-#ifndef vms	/* this conflicts with use of foreign commands... */
+#ifndef vms			/* this conflicts with use of foreign commands... */
     if ((s = getenv("CPROTO")) != NULL) {
 	parse_options(s, MAX_OPTIONS, &eargc, eargv);
-	nargv = (char **)xmalloc(((unsigned)(eargc+argc+1))*sizeof(char *));
+	nargv = (char **) xmalloc(((unsigned) (eargc + argc + 1)) * sizeof(char *));
 	nargv[0] = argv[0];
 	nargc = 1;
 	for (i = 0; i < eargc; ++i)
@@ -536,13 +545,13 @@ process_options (int *pargc, char ***pargv)
     /* Allocate buffer for C preprocessor command line. */
     n = strlen(cpp) + 1;
     for (i = 0; i < argc; ++i) {
-	n += quote_length(argv[i]) + 1;  /* add more for possible quoting */
+	n += quote_length(argv[i]) + 1;		/* add more for possible quoting */
     }
 #ifdef	vms
-    *(cpp_include = xmalloc(n+argc)) = '\0';
-    *(cpp_defines = xmalloc(n+argc)) = '\0';
-    *(cpp_undefns = xmalloc(n+argc)) = '\0';
-    n += 30;	/* for keywords */
+    *(cpp_include = xmalloc(n + argc)) = '\0';
+    *(cpp_defines = xmalloc(n + argc)) = '\0';
+    *(cpp_undefns = xmalloc(n + argc)) = '\0';
+    n += 30;			/* for keywords */
 #endif
     *(cpp_opt = (char *) xmalloc(n)) = '\0';
     n += (2 + strlen(CPP) + BUFSIZ);
@@ -556,21 +565,21 @@ process_options (int *pargc, char ***pargv)
 #ifdef	vms
 	    add2list(cpp_include, optarg);
 	    break;
-#else	/* unix */
+#else /* unix */
 	    add_inc_dir(optarg);
 #endif
-		/*FALLTHRU*/
+	    /*FALLTHRU */
 	case 'D':
 #ifdef	vms
 	    add2list(cpp_defines, optarg);
 	    break;
 #endif
-		/*FALLTHRU*/
+	    /*FALLTHRU */
 	case 'U':
 #ifdef	vms
 	    add2list(cpp_undefns, optarg);
 	    break;
-#else	/* UNIX, etc. */
+#else /* UNIX, etc. */
 #ifdef CPP
 	    tmp = (char *) xmalloc(quote_length(optarg) + 10);
 	    sprintf(tmp, " -%c%s", c, optarg);
@@ -615,40 +624,59 @@ process_options (int *pargc, char ***pargv)
 		((c == 'F') ? FMT_FUNC : FMT_PROTO);
 
 	    fmt[i].decl_spec_prefix = s;
-	    while (*s != '\0' && !isalnum(UCH(*s))) ++s;
-	    if (*s == '\0') usage();
+	    while (*s != '\0' && !isalnum(UCH(*s)))
+		++s;
+	    if (*s == '\0')
+		usage();
 	    *s++ = '\0';
-	    while (*s != '\0' && isalnum(UCH(*s))) ++s;
-	    if (*s == '\0') usage();
+	    while (*s != '\0' && isalnum(UCH(*s)))
+		++s;
+	    if (*s == '\0')
+		usage();
 
 	    fmt[i].declarator_prefix = s;
-	    while (*s != '\0' && !isalnum(UCH(*s))) ++s;
-	    if (*s == '\0') usage();
+	    while (*s != '\0' && !isalnum(UCH(*s)))
+		++s;
+	    if (*s == '\0')
+		usage();
 	    *s++ = '\0';
-	    while (*s != '\0' && isalnum(UCH(*s))) ++s;
-	    if (*s == '\0') usage();
+	    while (*s != '\0' && isalnum(UCH(*s)))
+		++s;
+	    if (*s == '\0')
+		usage();
 
 	    fmt[i].declarator_suffix = s;
-	    while (*s != '\0' && *s != '(') ++s;
-	    if (*s == '\0') usage();
+	    while (*s != '\0' && *s != '(')
+		++s;
+	    if (*s == '\0')
+		usage();
 	    *s++ = '\0';
 
 	    fmt[i].first_param_prefix = s;
-	    while (*s != '\0' && !isalnum(UCH(*s))) ++s;
-	    if (*s == '\0') usage();
+	    while (*s != '\0' && !isalnum(UCH(*s)))
+		++s;
+	    if (*s == '\0')
+		usage();
 	    *s++ = '\0';
-	    while (*s != '\0' && *s != ',') ++s;
-	    if (*s == '\0') usage();
+	    while (*s != '\0' && *s != ',')
+		++s;
+	    if (*s == '\0')
+		usage();
 
 	    fmt[i].middle_param_prefix = ++s;
-	    while (*s != '\0' && !isalnum(UCH(*s))) ++s;
-	    if (*s == '\0') usage();
+	    while (*s != '\0' && !isalnum(UCH(*s)))
+		++s;
+	    if (*s == '\0')
+		usage();
 	    *s++ = '\0';
-	    while (*s != '\0' && isalnum(UCH(*s))) ++s;
-	    if (*s == '\0') usage();
+	    while (*s != '\0' && isalnum(UCH(*s)))
+		++s;
+	    if (*s == '\0')
+		usage();
 
 	    fmt[i].last_param_suffix = s;
-	    while (*s != '\0' && *s != ')') ++s;
+	    while (*s != '\0' && *s != ')')
+		++s;
 	    *s = '\0';
 
 	    break;
@@ -692,25 +720,25 @@ process_options (int *pargc, char ***pargv)
 	    if (freopen(optarg, "w", stdout) == 0) {
 		perror(optarg);
 		exit(EXIT_FAILURE);
-  	    }
+	    }
 	    break;
 	case 'O':
 	    if (freopen(optarg, "w", stderr) == 0) {
 		perror(optarg);
 		exit(EXIT_FAILURE);
-  	    }
+	    }
 	    break;
 #if OPT_LINTLIBRARY
-	case 'T':	/* emit typedefs */
+	case 'T':		/* emit typedefs */
 	    types_out = TRUE;
 	    break;
 	case 'l':
-	    proto_style   = PROTO_LINTLIBRARY;
-	    extern_out    = FALSE;
-	    types_out     = TRUE;
+	    proto_style = PROTO_LINTLIBRARY;
+	    extern_out = FALSE;
+	    types_out = TRUE;
 	    variables_out = TRUE;
 # if !defined(vms) && !defined(MSDOS)
-	    (void)strcat(cpp_opt, " -C");	/* pass-through comments */
+	    (void) strcat(cpp_opt, " -C");	/* pass-through comments */
 # endif
 	    break;
 	case 'X':
@@ -719,7 +747,7 @@ process_options (int *pargc, char ***pargv)
 	    if ((int) extern_in < 0)
 		usage();
 	    break;
-#endif	/* OPT_LINTLIBRARY */
+#endif /* OPT_LINTLIBRARY */
 	case 'x':
 	    extern_in = MAX_INC_DEPTH;
 	    break;
@@ -730,7 +758,7 @@ process_options (int *pargc, char ***pargv)
 
 #ifdef	vms
     add_option("includes", cpp_include);
-    add_option("define",   cpp_defines);
+    add_option("define", cpp_defines);
     add_option("undefine", cpp_undefns);
 #endif
 
@@ -739,11 +767,13 @@ process_options (int *pargc, char ***pargv)
 }
 
 int
-main (int argc, char *argv[])
+main(int argc, char *argv[])
 {
     int i;
     FILE *inf;
+#ifdef NO_LEAKS
     char *argv0;
+#endif
 
 #ifdef __EMX__
     /* Expand file wild cards. */
@@ -762,11 +792,14 @@ main (int argc, char *argv[])
     /* Get the program name from the 0th argument, stripping the pathname
      * for readability.
      */
-    progname = argv0 = xstrdup(argv[0]);
+    progname = xstrdup(argv[0]);
+#ifdef NO_LEAKS
+    argv0 = progname = argv0;
+#endif
 #ifdef vms
-    for (i = strlen(progname)-1; i >= 0; i--) {
-    	if (progname[i] == SQUARE_R
-	 || progname[i] == ':') {
+    for (i = strlen(progname) - 1; i >= 0; i--) {
+	if (progname[i] == SQUARE_R
+	    || progname[i] == ':') {
 	    progname += (i + 1);
 	    break;
 	} else if (progname[i] == '.') {
@@ -774,7 +807,7 @@ main (int argc, char *argv[])
 	}
     }
 #else
-    for (i = (int)strlen(progname)-1; i >= 0; i--) {
+    for (i = (int) strlen(progname) - 1; i >= 0; i--) {
 	if (is_path_sep(progname[i])) {
 	    progname += (i + 1);
 	    break;
@@ -785,13 +818,13 @@ main (int argc, char *argv[])
 	}
     }
 #endif
-    argv[0] = progname;	/* do this so getopt is consistent with us */
+    argv[0] = progname;		/* do this so getopt is consistent with us */
 
     process_options(&argc, &argv);
 
 #if OPT_LINTLIBRARY
     if (lintLibrary()) {
-    	put_string(stdout, "/* LINTLIBRARY */\n");
+	put_string(stdout, "/* LINTLIBRARY */\n");
 	switch (func_style) {
 	case FUNC_ANSI:
 	case FUNC_BOTH:
@@ -839,17 +872,17 @@ main (int argc, char *argv[])
 	    char temp[BUFSIZ];
 	    char *s = strcpy(temp, argv[i]);
 #  if HAVE_LINK
-	    int len = (int)strlen(temp);
+	    int len = (int) strlen(temp);
 	    s += len - 1;
 	    if ((len > 2)
-	     && (s[-1] == '.')
-	     && (*s == 'l' || *s == 'y')) {
+		&& (s[-1] == '.')
+		&& (*s == 'l' || *s == 'y')) {
 		while (s != temp && s[-1] != '/')
 		    s--;
-		(void)strcpy(s, "XXXXXX.c");
-	    	call_mktemp(temp);
-	    	if (link(argv[i], temp) < 0)
-		    (void)strcpy(temp, argv[i]);
+		(void) strcpy(s, "XXXXXX.c");
+		call_mktemp(temp);
+		if (link(argv[i], temp) < 0)
+		    (void) strcpy(temp, argv[i]);
 	    }
 #  endif
 #  define FileName temp
@@ -857,7 +890,7 @@ main (int argc, char *argv[])
 #  define FileName argv[i]
 #  ifdef vms
 	    char temp[BUFSIZ];
-	    (void)strcpy(temp, FileName);
+	    (void) strcpy(temp, FileName);
 #  endif
 # endif
 	    if (func_style == FUNC_NONE && cpp != NULL) {
@@ -872,24 +905,26 @@ main (int argc, char *argv[])
 		system(cpp_cmd);
 		inf = fopen(temp, "r");
 #else
-		if (cpp_len < (strlen(cpp) + strlen(cpp_opt) + strlen(FileName) + 100)) {
-			cpp_len = (strlen(cpp) + strlen(cpp_opt) + strlen(FileName) + 100);
-			cpp_cmd = realloc(cpp_cmd, cpp_len);
+		if (cpp_len < (strlen(cpp) + strlen(cpp_opt) +
+			       strlen(FileName) + 100)) {
+		    cpp_len = (strlen(cpp) + strlen(cpp_opt) +
+			       strlen(FileName) + 100);
+		    cpp_cmd = realloc(cpp_cmd, cpp_len);
 		}
 		sprintf(cpp_cmd, "%s%s %s", cpp, cpp_opt, FileName);
 		if (quiet)
-			strcat(cpp_cmd, " 2>/dev/null");
+		    strcat(cpp_cmd, " 2>/dev/null");
 		inf = popen(cpp_cmd, "r");
 #endif
 		if (inf == NULL || ferror(inf) || feof(inf)) {
 		    fprintf(stderr, "%s: error running %s\n", progname,
-		     cpp_cmd);
+			    cpp_cmd);
 		    continue;
 		}
 	    } else {
 		if ((inf = fopen(argv[i], "r")) == NULL) {
 		    fprintf(stderr, "%s: cannot read file %s\n", progname,
-		     argv[i]);
+			    argv[i]);
 		    continue;
 		}
 	    }
@@ -909,14 +944,14 @@ main (int argc, char *argv[])
 #endif
 #if defined(CPP_DOES_ONLY_C_FILES) || defined(vms)
 		if (strcmp(argv[i], temp)) {
-			(void)unlink(temp);
+		    (void) unlink(temp);
 		}
 		pop_file(TRUE);
 #endif
 	    } else {
 		pop_file(FALSE);
 	    }
-#else	/* no CPP defined */
+#else /* no CPP defined */
 	    pop_file(FALSE);
 #endif
 	}
@@ -925,15 +960,19 @@ main (int argc, char *argv[])
     if (proto_macro && define_macro) {
 	printf("\n#undef %s\n", macro_name);
     }
-
 #ifdef NO_LEAKS
 # ifdef CPP
-    if (cpp_opt != 0) free(cpp_opt);
-    if (cpp_cmd != 0) free(cpp_cmd);
+    if (cpp_opt != 0)
+	free(cpp_opt);
+    if (cpp_cmd != 0)
+	free(cpp_cmd);
 #  ifdef vms
-    if (cpp_include != 0) free(cpp_include);
-    if (cpp_defines != 0) free(cpp_defines);
-    if (cpp_undefns != 0) free(cpp_undefns);
+    if (cpp_include != 0)
+	free(cpp_include);
+    if (cpp_defines != 0)
+	free(cpp_defines);
+    if (cpp_undefns != 0)
+	free(cpp_undefns);
 #  endif
 # endif
     if (inc_dir != 0) {
@@ -963,7 +1002,8 @@ main (int argc, char *argv[])
  */
 #if HAVE_LIBDBMALLOC
 #undef exit
-void ExitProgram(int code)
+void
+ExitProgram(int code)
 {
     extern int malloc_errfd;	/* FIXME: should be in dbmalloc.h */
     malloc_dump(malloc_errfd);

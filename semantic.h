@@ -1,4 +1,4 @@
-/* $Id: semantic.h,v 4.4 2008/11/20 01:04:36 tom Exp $
+/* $Id: semantic.h,v 4.5 2010/07/11 17:18:40 tom Exp $
  *
  * Declarations of semantic action routines
  */
@@ -38,7 +38,7 @@ extern void add_param_list (
 extern void new_ident_list (
     ParameterList *param_list);
 extern void add_ident_list (
-    ParameterList *to, ParameterList *from, char *name);
+    ParameterList *to, ParameterList *from, const char *name);
 extern void set_param_types (
     ParameterList *params, DeclSpec *decl_spec, DeclaratorList *declarators);
 extern void gen_declarations (

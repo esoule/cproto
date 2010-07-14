@@ -1,0 +1,16 @@
+Source: cproto
+Maintainer: Thomas E. Dickey <dickey@invisible-island.net>
+Section: devel
+Priority: extra
+Standards-Version: 3.8.4
+Build-Depends: debhelper (>= 5)
+Homepage: http://invisible-island.net/cproto/
+
+Package: cproto
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: generate C function prototypes and convert function definitions
+ Cproto generates function prototypes for functions defined in the specified C
+ source files to the standard output.  The function definitions may be in the
+ old style or ANSI C style.  Optionally, cproto also outputs declarations for
+ variables defined in the files.

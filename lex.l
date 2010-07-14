@@ -1,7 +1,7 @@
 %p 3000
 
 %{
-/* $Id: lex.l,v 4.19 2008/11/20 01:08:20 tom Exp $
+/* $Id: lex.l,v 4.21 2010/07/14 10:43:45 tom Exp $
  *
  * Lexical analyzer for C function prototype generator
  *
@@ -159,7 +159,7 @@ QUOTE		[\"\']
 
 			    save_text();
 
-			    *(name = (char *) xmalloc((unsigned) (yyleng + 1))) = '\0';
+			    *(name = (char *) xmalloc((size_t) (yyleng + 1))) = '\0';
 			    sscanf(yytext, "define %s", name);
 
 			    get_cpp_directive(1);
@@ -727,7 +727,7 @@ get_cpp_directive (int copy)
 
     lastc[0] = lastc[1] = lastc[2] = lastc[3] = '\0';
     if (copy) {
-	need_temp(2);
+	need_temp((size_t) 2);
 	*temp_buf = '\0';
     }
 
@@ -918,12 +918,12 @@ put_file (FILE *outf)
 {
     char block[BLOCK_SIZE];
     long filesize;
-    unsigned nread, count;
+    size_t nread, count;
 
     filesize = ftell(cur_file->tmp_file);
     fseek(cur_file->tmp_file, 0L, 0);
     while (filesize > 0) {
-	count = (filesize < BLOCK_SIZE) ? (unsigned)filesize : BLOCK_SIZE;
+	count = (filesize < BLOCK_SIZE) ? (size_t)filesize : BLOCK_SIZE;
 	nread = fread(block, sizeof(char), count, cur_file->tmp_file);
 	if (nread == 0)
 	    break;

@@ -1,4 +1,4 @@
-/* $Id: cproto.h,v 4.13 2008/11/20 00:45:31 tom Exp $
+/* $Id: cproto.h,v 4.15 2010/07/14 09:17:42 tom Exp $
  *
  * Declarations for C function prototype generator
  */
@@ -187,12 +187,12 @@ typedef int Scope;
 
 /* Prototype/function definition output format */
 typedef struct func_format {
-    char *decl_spec_prefix;	/* output before declaration specifier */
-    char *declarator_prefix;	/* output before declarator name */
-    char *declarator_suffix;	/* output before '(' of parameter list */
-    char *first_param_prefix;	/* output before first parameter */
-    char *middle_param_prefix;	/* output before each subsequent parameter */
-    char *last_param_suffix;	/* output after last parameter */
+    const char *decl_spec_prefix;	/* output before declaration specifier */
+    const char *declarator_prefix;	/* output before declarator name */
+    const char *declarator_suffix;	/* output before '(' of parameter list */
+    const char *first_param_prefix;	/* output before first parameter */
+    const char *middle_param_prefix;	/* output before each subsequent parameter */
+    const char *last_param_suffix;	/* output after last parameter */
 } FuncFormat;
 
 /* Program options */
@@ -209,11 +209,11 @@ extern PrototypeStyle proto_style;
 extern FuncDefStyle func_style;
 extern boolean proto_macro;
 extern boolean define_macro;
-extern char *macro_name;
+extern const char *macro_name;
 extern boolean proto_comments;
 extern boolean file_comments;
 extern boolean quiet;
-extern char *func_directive;
+extern const char *func_directive;
 extern unsigned num_inc_dir;
 extern char **inc_dir;
 extern FuncFormat fmt[4];
@@ -243,8 +243,8 @@ extern char *xStrdup        (const char *s, char *f, int l);
 #define xmalloc(n)          xMalloc(n, __FILE__, __LINE__)
 #define xstrdup(s)          xStrdup(s, __FILE__, __LINE__)
 #else
-extern void *xrealloc       (void *p, unsigned n);
-extern void *xmalloc        (unsigned n);
+extern void *xrealloc       (void *p, size_t n);
+extern void *xmalloc        (size_t n);
 extern char *xstrdup        (const char *src);
 #endif
 #endif /* !HAVE_LIBDMALLOC */
@@ -254,20 +254,20 @@ extern char *trim_path_sep  (char *s);
 
 /* lintlibs.c */
 #if OPT_LINTLIBRARY
-extern void put_string      (FILE *outf, char *s);
+extern void put_string      (FILE *outf, const char *s);
 extern void put_char        (FILE *outf, int c);
 extern void put_newline     (FILE *outf);
 extern void put_blankline   (FILE *outf);
-extern void put_padded      (FILE *outf, char *s);
+extern void put_padded      (FILE *outf, const char *s);
 extern void fmt_library     (int code);
 extern void begin_tracking  (void);
 extern int already_declared (char *name);
 extern void track_in        (void);
 extern int want_typedef     (void);
 extern void begin_typedef   (void);
-extern void copy_typedef    (char *s);
+extern void copy_typedef    (const char *s);
 extern void end_typedef     (void);
-extern void imply_typedef   (char *s);
+extern void imply_typedef   (const char *s);
 extern char *implied_typedef (void);
 extern void indent          (FILE *outf);
 extern int lint_ellipsis    (Parameter *p);
@@ -297,8 +297,8 @@ extern void free_lintlibs   (void);
 #endif
 
 /* strkey.c */
-extern char *strkey         (char *src, char *key);
-extern void strcut          (char *src, char *key);
+extern char *strkey         (char *src, const char *key);
+extern void strcut          (char *src, const char *key);
 
 /* grammar.y */
 extern boolean is_typedef_name (char *name);
@@ -310,7 +310,7 @@ extern long cur_begin_comment (void);
 extern char *cur_text       (void);
 extern void pop_file        (int closed);
 extern void init_parser     (void);
-extern void process_file    (FILE *infile, char *name);
+extern void process_file    (FILE *infile, const char *name);
 #ifdef NO_LEAKS
 extern void free_lexer      (void);
 extern void free_parser     (void);

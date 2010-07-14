@@ -1,4 +1,4 @@
-/* $Id: yyerror.c,v 4.7 2008/11/20 01:01:11 tom Exp $
+/* $Id: yyerror.c,v 4.9 2010/07/14 09:57:46 tom Exp $
  *
  * This file is included into grammar.y to provide the 'yyerror()' function.
  * If the yacc/bison parser is one that we know how to backtrack, we'll augment
@@ -14,7 +14,7 @@
  * the internal state of 'yyparse()'.
  */
 
-#if BISON_HAS_YYTNAME	/* bison 1.22 */
+#if BISON_HAS_YYTNAME		/* bison 1.22 */
 #if !defined(YYFLAG)
 #define YYFLAG YYPACT_NINF	/* yabb (yet-another-bison-bug) */
 #endif
@@ -34,7 +34,7 @@
     yaccExpected("", -1);\
 }
 #endif
-#endif	/* BISON_HAS_YYTNAME */
+#endif /* BISON_HAS_YYTNAME */
 
 #if YACC_HAS_YYTOKS_2
 #undef  YACC_HAS_YYTOKS
@@ -72,9 +72,9 @@
     yaccExpected("", -1);\
 }
 #endif
-#endif	/* YACC_HAS_YYTOKS */
+#endif /* YACC_HAS_YYTOKS */
 
-#if YACC_HAS_YYNAME	/* Linux's yacc */
+#if YACC_HAS_YYNAME		/* Linux's yacc */
 #if YYDEBUG
 #define	yyerror(text) {\
     register int n, x, c1, count = 0;\
@@ -91,36 +91,43 @@
     yaccExpected("", -1);\
 }
 #endif
-#endif	/* YACC_HAS_YYNAME */
-
+#endif /* YACC_HAS_YYNAME */
 
 /*
  * Any way we define it, 'yyerror()' is a real function (that we provide,
  * rather than use the one from a library).
  */
-static void yaccError    (char *);
+static void yaccError(const char *);
 
 #ifdef yyerror
 static int
 compar(const void *p1, const void *p2)
 {
-    const char *a = *(const char *const *)p1;
-    const char *b = *(const char *const *)p2;
+    const char *a = *(const char *const *) p1;
+    const char *b = *(const char *const *) p2;
     return strcmp(a, b);
 }
 
 #define MSGLEN 80
 
 static void
-yaccExpected (const char *s, int count)
+yaccExpected(const char *s, int count)
 {
     static struct {
 	const char *actual, *name;
     } tbl[] = {
-	{"...",	"T_ELLIPSIS"},
-	{"[]",	"T_BRACKETS"},
-	{"{",	"T_LBRACE"},
-	{"}",	"T_MATCHRBRACE"},
+	{
+	    "...", "T_ELLIPSIS"
+	},
+	{
+	    "[]", "T_BRACKETS"
+	},
+	{
+	    "{", "T_LBRACE"
+	},
+	{
+	    "}", "T_MATCHRBRACE"
+	},
     };
     unsigned j;
     int k, x;
@@ -132,14 +139,14 @@ yaccExpected (const char *s, int count)
 
     static unsigned have;
     static unsigned used;
-    static char	**vec;
+    static char **vec;
 
     if (count < 0) {
 	if (used != 0) {
 	    if (used > 1)
-		qsort((char *)vec, used, sizeof(vec[0]), compar);
+		qsort((char *) vec, used, sizeof(vec[0]), compar);
 	    /* limit length of error message */
-	    k = MSGLEN - (int) (strlen(vec[used-1]) + 2);
+	    k = MSGLEN - (int) (strlen(vec[used - 1]) + 2);
 	    for (j = 0; j < used; j++) {
 		tag = j ? " " : "Expected: ";
 		s = vec[j];
@@ -155,7 +162,7 @@ yaccExpected (const char *s, int count)
 	    }
 	    fprintf(stderr, "\n");
 	    while (used-- != 0) {
-	    	free(vec[used]);
+		free(vec[used]);
 		vec[used] = 0;
 	    }
 	}
@@ -165,7 +172,7 @@ yaccExpected (const char *s, int count)
 
 	strcpy(tmp, t);
 	if (!strncmp(t, "T_", 2)) {
-	    for (j = 0; j < sizeof(tbl)/sizeof(tbl[0]); j++) {
+	    for (j = 0; j < sizeof(tbl) / sizeof(tbl[0]); j++) {
 		if (!strcmp(t, tbl[j].name)) {
 		    t = tbl[j].actual;
 		    found = TRUE;
@@ -173,7 +180,7 @@ yaccExpected (const char *s, int count)
 		}
 	    }
 	    if (!found) {
-		tt = strncpy(tmp, t + 2, sizeof(tmp)-1);
+		tt = strncpy(tmp, t + 2, sizeof(tmp) - 1);
 		for (k = 0; tt[k] != '\0'; k++) {
 		    if (tt[k] == '_')
 			tt[k] = '-';
@@ -199,6 +206,7 @@ yaccExpected (const char *s, int count)
 	used = (unsigned) (count + 1);
     }
 }
+
 #else
 #define yyerror(s) yaccError(s)
-#endif	/* yyerror */
+#endif /* yyerror */

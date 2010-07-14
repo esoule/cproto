@@ -1,4 +1,4 @@
-/* $Id: grammar.y,v 4.15 2008/11/20 01:00:19 tom Exp $
+/* $Id: grammar.y,v 4.17 2010/07/14 09:22:30 tom Exp $
  *
  * yacc grammar for C function prototype generator
  * This was derived from the grammar in Appendix A of
@@ -95,7 +95,7 @@ static Declarator *cur_declarator;
 
 /* temporary string buffer */
 static char *temp_buf = 0;
-static unsigned temp_len = 0;
+static size_t temp_len = 0;
 
 /* table of typedef names */
 static SymbolTable *typedef_names;
@@ -110,7 +110,7 @@ static SymbolTable *type_qualifiers;
 typedef struct {
     char *base_name;		/* base input file name */
     char *file_name;		/* current file name */
-    unsigned len_file_name;	/* ...its allocated size */
+    size_t len_file_name;	/* ...its allocated size */
     FILE *file; 		/* input file */
     unsigned line_num;		/* current line number in input file */
     FILE *tmp_file;		/* temporary file */
@@ -157,7 +157,7 @@ haveAnsiParam (void)
     return FALSE;
 }
 
-static void need_temp(unsigned need)
+static void need_temp(size_t need)
 {
     if (need > temp_len) {
 	if (need < MAX_TEXT_SIZE)
@@ -882,7 +882,7 @@ direct_abs_declarator
 #endif
 
 static void
-yaccError (char *msg)
+yaccError (const char *msg)
 {
     func_params = NULL;
     put_error();		/* tell what line we're on, and what file */
@@ -975,9 +975,9 @@ init_parser (void)
  * code to a temporary file.
  */
 void
-process_file (FILE *infile, char *name)
+process_file (FILE *infile, const char *name)
 {
-    char *s;
+    const char *s;
 
     if (strlen(name) > 2) {
 	s = name + strlen(name) - 2;

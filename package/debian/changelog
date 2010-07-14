@@ -1,0 +1,5 @@
+cproto (4.7i) unstable; urgency=low
+
+  * Add package scripts to upstream source, for test-builds.
+
+ -- Thomas E. Dickey <dickey@invisible-island.net>  Wed, 14 Jul 2010 04:59:59 -0400

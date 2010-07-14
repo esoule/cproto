@@ -1,4 +1,4 @@
-/* $Id: strkey.c,v 4.4 2005/12/08 20:31:14 tom Exp $
+/* $Id: strkey.c,v 4.6 2010/07/14 09:58:04 tom Exp $
  *
  * Some string handling routines
  */
@@ -15,18 +15,17 @@
  * against an identifier-token.
  */
 char *
-strkey (char *src, char *key)
+strkey(char *src, const char *key)
 {
     if (src != 0 && key != 0) {
-	register char *s  = src, *d;
+	register char *s = src, *d;
 	register size_t len = strlen(key);
 
 	while (*s) {
 	    if (!LETTER(*s)) {
 		s++;
 	    } else {
-		for (d = s; LETTER(*d); d++)
-		    ;
+		for (d = s; LETTER(*d); d++) ;
 		if ((d - s) == (int) len && !strncmp(s, key, len))
 		    return s;
 		s = d;
@@ -40,7 +39,7 @@ strkey (char *src, char *key)
  * Delete a specified keyword from a string if it appears there
  */
 void
-strcut (char *src, char *key)
+strcut(char *src, const char *key)
 {
     register char *s, *d;
 
@@ -48,8 +47,7 @@ strcut (char *src, char *key)
 	d = s + strlen(key);
 	while (*d != '\0' && !LETTER(*d))
 	    d++;
-	while ((*s++ = *d++) != '\0')
-	    ;
+	while ((*s++ = *d++) != '\0') ;
     }
 }
 
@@ -59,7 +57,7 @@ strcut (char *src, char *key)
  */
 #if !HAVE_STRSTR
 char *
-strstr (char *src, char *key)
+strstr(char *src, char *key)
 {
     char *s;
     int keylen;
@@ -71,7 +69,7 @@ strstr (char *src, char *key)
     while (s != NULL) {
 	if (strncmp(s, key, keylen) == 0)
 	    return s;
-	s = strchr(s+1, *key);
+	s = strchr(s + 1, *key);
     }
     return NULL;
 }
