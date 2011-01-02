@@ -1,12 +1,10 @@
-/* $Id: cproto.c,v 4.30 2010/07/14 09:55:17 tom Exp $
+/* $Id: cproto.c,v 4.33 2011/01/02 19:24:03 tom Exp $
  *
  * C function prototype generator and function definition converter
  */
-#define VERSION "4.7i"
+#define VERSION "4.7j"
 
-#include <stdio.h>
-#include <ctype.h>
-#include "cproto.h"
+#include <cproto.h>
 
 /* getopt declarations */
 #if HAVE_GETOPT_H

@@ -1,6 +1,7 @@
-MANIFEST for cproto-4.7f, version v4_7f
+MANIFEST for cproto-4.7j, version v4_7j
 --------------------------------------------------------------------------------
 MANIFEST                        this file
+AUTHORS                         authors
 CHANGES                         summary of changes made to CPROTO
 Makefile.in                     top-level makefile template
 README                          overview of the CPROTO program
@@ -10,7 +11,6 @@ config.sub                      configure utility script
 config_h.in                     template for config.h
 configure                       configure script
 configure.in                    script for generating 'configure' via autoconf
-configure                       Configuration script for UNIX
 cproto.1                        man-page for CPROTO
 cproto.c                        main program of CPROTO
 cproto.h                        common datatypes and definitions for CPROTO
@@ -20,7 +20,6 @@ grammar.y                       yacc grammar for CPROTO
 install-sh                      install-script
 lex.l                           lex rules for CPROTO
 lintlibs.c                      functions used for lint-library formatting
-mkdirs.sh                       mkinstalldirs (renamed for MSDOS compatibility)
 semantic.c                      functions to support yacc grammar (formatting and translation)
 semantic.h                      interface definitions of semantic.c
 strkey.c                        look for a keyword within a string
@@ -43,6 +42,19 @@ os2                             subdirectory
 os2/README                      description of files in os2 directory
 os2/run_test.cmd                run test-cases on OS/2
 os2/watcom.mak                  makefile for watcom (OS/2)
+package                         subdirectory
+package/cproto.spec             RPM build-script for cproto
+package/debian                  subdirectory
+package/debian/changelog        debian build script
+package/debian/compat           debian build script
+package/debian/control          debian build script
+package/debian/copyright        debian build script
+package/debian/docs             debian build script
+package/debian/rules            debian build script
+package/debian/source           subdirectory
+package/debian/source/format    debian build script
+package/debian                  subdirectory
+package/debian/watch            debian build script
 porting                         subdirectory
 porting/README                  description of files in CPROTO/PORTING
 porting/getopt.c                free version of getopt

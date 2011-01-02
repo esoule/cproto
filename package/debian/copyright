@@ -1,4 +1,4 @@
-Upstream source http://dickey.his.com/byacc/byacc.html
+Upstream source http://invisible-island.net/cproto/cproto.html
 
 cproto is in the public domain; changes made to it by the current
 maintainer are likewise unrestricted.  That applies to most of the files.
@@ -11,7 +11,7 @@ Current cproto upstream maintainer: Thomas Dickey <dickey@invisible-island.net>
 
 Files: aclocal.m4
 Licence: other-BSD
-Copyright:  1994-2009,2010 by Thomas E. Dickey
+Copyright:  1994-2010,2011 by Thomas E. Dickey
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the
     "Software"), to deal in the Software without restriction, including

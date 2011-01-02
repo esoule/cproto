@@ -86,6 +86,13 @@ char	*dots_5(p1, p2, p3)
 		char	*p3;
 		{ return(*(char **)0); }
 
+	/* VARARGS3 */
+char	*(dots_6)(p1, p2, p3)
+		int	p1;
+		char	p2;
+		char	*p3;
+		{ return(*(char **)0); }
+
 _FIRST	*xdots_0(p1)
 		int	p1;
 		{ return(*(_FIRST **)0); }
@@ -110,7 +117,8 @@ _FIRST	*func2(p1, p2, p)
 		float	p;
 		{ return(*(_FIRST **)0); }
 
-int	*(func_func)();
+int	*(func_func)()
+		{ return(*(int **)0); }
 
 float	efunc0(p1, p2, p3)
 		int	p1;

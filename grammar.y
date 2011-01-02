@@ -1,4 +1,4 @@
-/* $Id: grammar.y,v 4.17 2010/07/14 09:22:30 tom Exp $
+/* $Id: grammar.y,v 4.21 2011/01/02 19:31:22 tom Exp $
  *
  * yacc grammar for C function prototype generator
  * This was derived from the grammar in Appendix A of
@@ -66,15 +66,13 @@
 %type <text> enumeration
 
 %{
-#include <stdio.h>
-#include <ctype.h>
-#include "cproto.h"
-#include "symbol.h"
-#include "semantic.h"
+
+#include <symbol.h>
+#include <semantic.h>
 
 #define YYMAXDEPTH 150
 
-extern	int	yylex (void);
+extern int yylex(void);
 
 /* declaration specifier attributes for the typedef statement currently being
  * scanned
@@ -111,10 +109,10 @@ typedef struct {
     char *base_name;		/* base input file name */
     char *file_name;		/* current file name */
     size_t len_file_name;	/* ...its allocated size */
-    FILE *file; 		/* input file */
+    FILE *file;			/* input file */
     unsigned line_num;		/* current line number in input file */
     FILE *tmp_file;		/* temporary file */
-    long begin_comment; 	/* tmp file offset after last written ) or ; */
+    long begin_comment;		/* tmp file offset after last written ) or ; */
     long end_comment;		/* tmp file offset after last comment */
     boolean convert;		/* if TRUE, convert function definitions */
     boolean changed;		/* TRUE if conversion done in this file */
@@ -124,17 +122,16 @@ static IncludeStack *cur_file;	/* current input file */
 
 #include "yyerror.c"
 
-static int haveAnsiParam (void);
-
+static int haveAnsiParam(void);
 
 /* Flags to enable us to find if a procedure returns a value.
  */
-static int return_val,	/* nonzero on BRACES iff return-expression found */
-	   returned_at;	/* marker for token-number to set 'return_val' */
+static int return_val,		/* nonzero on BRACES iff return-expression found */
+  returned_at;			/* marker for token-number to set 'return_val' */
 
 #if OPT_LINTLIBRARY
 static const char *
-dft_decl_spec (void)
+dft_decl_spec(void)
 {
     return (lintLibrary() && !return_val) ? "void" : "int";
 }
@@ -144,7 +141,7 @@ dft_decl_spec (void)
 #endif
 
 static int
-haveAnsiParam (void)
+haveAnsiParam(void)
 {
     Parameter *p;
     if (func_params != 0) {
@@ -157,7 +154,8 @@ haveAnsiParam (void)
     return FALSE;
 }
 
-static void need_temp(size_t need)
+static void
+need_temp(size_t need)
 {
     if (need > temp_len) {
 	if (need < MAX_TEXT_SIZE)
@@ -168,6 +166,7 @@ static void need_temp(size_t need)
 	temp_len = need;
     }
 }
+
 %}
 %%
 
@@ -867,6 +866,7 @@ direct_abs_declarator
 
 %%
 
+
 #if defined(HAVE_CONFIG_H)
 # include "lex.yy.c"
 #else
@@ -882,7 +882,7 @@ direct_abs_declarator
 #endif
 
 static void
-yaccError (const char *msg)
+yaccError(const char *msg)
 {
     func_params = NULL;
     put_error();		/* tell what line we're on, and what file */
@@ -893,9 +893,10 @@ yaccError (const char *msg)
  * analyzer.
  */
 void
-init_parser (void)
+init_parser(void)
 {
-    static const char *keywords[] = {
+    static const char *keywords[] =
+    {
 	"const",
 	"restrict",
 	"volatile",
@@ -947,7 +948,7 @@ init_parser (void)
 #endif
 #endif
 #ifdef __GNUC__
-	/* gcc aliases */
+    /* gcc aliases */
 	"__builtin_va_arg",
 	"__builtin_va_list",
 	"__const",
@@ -965,7 +966,7 @@ init_parser (void)
 
     /* Initialize type qualifier table. */
     type_qualifiers = new_symbol_table();
-    for (i = 0; i < sizeof(keywords)/sizeof(keywords[0]); ++i) {
+    for (i = 0; i < sizeof(keywords) / sizeof(keywords[0]); ++i) {
 	new_symbol(type_qualifiers, keywords[i], NULL, DS_NONE);
     }
 }
@@ -975,7 +976,7 @@ init_parser (void)
  * code to a temporary file.
  */
 void
-process_file (FILE *infile, const char *name)
+process_file(FILE *infile, const char *name)
 {
     const char *s;
 
@@ -1003,7 +1004,7 @@ process_file (FILE *infile, const char *name)
     include_file(strcpy(base_file, name), func_style != FUNC_NONE);
     if (file_comments) {
 #if OPT_LINTLIBRARY
-    	if (lintLibrary()) {
+	if (lintLibrary()) {
 	    put_blankline(stdout);
 	    begin_tracking();
 	}
@@ -1022,7 +1023,7 @@ process_file (FILE *infile, const char *name)
 void
 free_parser(void)
 {
-    free_symbol_table (type_qualifiers);
+    free_symbol_table(type_qualifiers);
 #ifdef FLEX_SCANNER
     if (yy_current_buffer != 0)
 	yy_delete_buffer(yy_current_buffer);

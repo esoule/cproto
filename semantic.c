@@ -1,11 +1,9 @@
-/* $Id: semantic.c,v 4.13 2010/07/14 09:56:29 tom Exp $
+/* $Id: semantic.c,v 4.15 2011/01/02 19:17:15 tom Exp $
  *
  * Semantic actions executed by the parser of the
  * C function prototype generator.
  */
-#include <stdio.h>
-#include "cproto.h"
-#include "semantic.h"
+#include <semantic.h>
 
 #if OPT_LINTLIBRARY
 #define	putParameter(fp,p,f,n,c)		put_parameter(fp, p, f, n, c)

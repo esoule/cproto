@@ -1,7 +1,8 @@
 %p 3000
 
 %{
-/* $Id: lex.l,v 4.21 2010/07/14 10:43:45 tom Exp $
+
+/* $Id: lex.l,v 4.22 2011/01/02 18:31:53 tom Exp $
  *
  * Lexical analyzer for C function prototype generator
  *
@@ -48,7 +49,7 @@
 			    return type_of_name(yytext);
 
 #if !OPT_LINTLIBRARY
-#define gcc_attribute   absorb_special /* otherwise, we don't care */
+#define gcc_attribute   absorb_special	/* otherwise, we don't care */
 #endif
 
 #ifdef	apollo
@@ -62,21 +63,21 @@
 #ifdef	vms
 #define	vms_extern	save_text_offset(); return(T_EXTERN);
 #define	vms_keyword	save_text_offset();
-#else	/* unix */
+#else /* unix */
 #define	vms_extern	is_IDENTIFIER
 #define	vms_keyword	is_IDENTIFIER
-#endif	/* vms/unix */
+#endif /* vms/unix */
 
-char *	varargs_str;		/* save printflike/scanflike text */
-int	varargs_num;		/* code to save "VARARGS" */
-int	debug_trace;		/* true if we trace token-level stuff */
-char	base_file[BUFSIZ];	/* top-level file name */
+char *varargs_str;		/* save printflike/scanflike text */
+int varargs_num;		/* code to save "VARARGS" */
+int debug_trace;		/* true if we trace token-level stuff */
+char base_file[BUFSIZ];		/* top-level file name */
 
-static int asm_level;	/* parenthesis level for "asm" parsing */
-static int save_cpp;	/* true if cpp-text within curly braces */
-static int in_cpp;	/* true while we are within cpp-text */
-static int curly;	/* number of curly brace nesting levels */
-static int ly_count;	/* number of occurances of %% */
+static int asm_level;		/* parenthesis level for "asm" parsing */
+static int save_cpp;		/* true if cpp-text within curly braces */
+static int in_cpp;		/* true while we are within cpp-text */
+static int curly;		/* number of curly brace nesting levels */
+static int ly_count;		/* number of occurances of %% */
 
 #ifdef FLEX_SCANNER
 /* flex scanner state */
@@ -92,35 +93,36 @@ static YY_BUFFER_STATE *buffer_stack;
 #define LexInput() input()
 #endif
 
-static unsigned inc_limit;		/* stack size */
-static int inc_depth;			/* include nesting level */
-static IncludeStack *inc_stack;		/* stack of included files */
+static unsigned inc_limit;	/* stack size */
+static int inc_depth;		/* include nesting level */
+static IncludeStack *inc_stack;	/* stack of included files */
 static SymbolTable *included_files;	/* files already included */
 
-static int  type_of_name      (char *name);
-static void startCpp          (int level);
-static void finishCpp         (void);
+static int type_of_name(char *name);
+static void startCpp(int level);
+static void finishCpp(void);
 #if defined(apollo) || !OPT_LINTLIBRARY
-static void absorb_special    (void);
+static void absorb_special(void);
 #endif
 #if OPT_LINTLIBRARY
-static void gcc_attribute     (void);
+static void gcc_attribute(void);
 #endif
-static void update_line_num   (void);
-static void save_text         (void);
-static void save_text_offset  (void);
-static void get_quoted        (void);
-static void get_comment       (void);
-static void get_cpp_directive (int copy);
-static void parsing_file_name (unsigned need);
-static void do_include        (char *f);
-static void include_file      (char *name, int convert);
-static void put_file          (FILE *outf);
-static void put_quoted        (int c);
+static void update_line_num(void);
+static void save_text(void);
+static void save_text_offset(void);
+static void get_quoted(void);
+static void get_comment(void);
+static void get_cpp_directive(int copy);
+static void parsing_file_name(unsigned need);
+static void do_include(char *f);
+static void include_file(char *name, int convert);
+static void put_file(FILE *outf);
+static void put_quoted(int c);
 
 #if OPT_LINTLIBRARY
-static int decipher_comment   (char *keyword, int len);
+static int decipher_comment(char *keyword, int len);
 #endif
+
 %}
 
 WS		[ \t]
@@ -365,7 +367,7 @@ QUOTE		[\"\']
 %%
 
 static void
-startCpp (int level)
+startCpp(int level)
 {
     save_cpp = level;
     in_cpp = TRUE;
@@ -377,7 +379,7 @@ finishCpp(void)
 {
     in_cpp = FALSE;
     if (save_cpp)
-    	BEGIN CURLY;
+	BEGIN CURLY;
     else
 	BEGIN INITIAL;
 }
@@ -387,10 +389,10 @@ finishCpp(void)
  */
 #if defined(apollo) || !OPT_LINTLIBRARY
 static void
-absorb_special (void)
+absorb_special(void)
 {
-    int	c;
-    int	nest	= 0;
+    int c;
+    int nest = 0;
     while ((c = input()) > 0) {
 	if (c == '(')
 	    nest++;
@@ -413,15 +415,15 @@ absorb_special (void)
  * avoid spurious matches with non-gcc compilers).
  */
 static void
-gcc_attribute (void)
+gcc_attribute(void)
 {
-    int	c, num1, num2;
-    int	nest = 0;
+    int c, num1, num2;
+    int nest = 0;
     unsigned len = 0;
     char bfr[BUFSIZ];
 
     while ((c = LexInput()) > 0) {
-	if (len < sizeof(bfr)-1 && !isspace(c))
+	if (len < sizeof(bfr) - 1 && !isspace(c))
 	    bfr[len++] = (char) c;
 	if (c == '(')
 	    nest++;
@@ -434,10 +436,10 @@ gcc_attribute (void)
     if (!strcmp(bfr, "((noreturn))")) {
 	exitlike_func = TRUE;
     } else if (sscanf(bfr, "((format(printf,%d,%d)))", &num1, &num2) == 2) {
-	(void)sprintf(bfr, "PRINTFLIKE%d", varargs_num = num1);
+	(void) sprintf(bfr, "PRINTFLIKE%d", varargs_num = num1);
 	varargs_str = xstrdup(bfr);
     } else if (sscanf(bfr, "((format(scanf,%d,%d)))", &num1, &num2) == 2) {
-	(void)sprintf(bfr, "SCANFLIKE%d", varargs_num = num1);
+	(void) sprintf(bfr, "SCANFLIKE%d", varargs_num = num1);
 	varargs_str = xstrdup(bfr);
     }
 }
@@ -446,7 +448,7 @@ gcc_attribute (void)
 /* Decode the current token according to the type-of-name
  */
 static int
-type_of_name (char *name)
+type_of_name(char *name)
 {
     if (find_symbol(type_qualifiers, name) != NULL)
 	return T_TYPE_QUALIFIER;
@@ -459,7 +461,7 @@ type_of_name (char *name)
 }
 
 boolean
-is_typedef_name (char *name)
+is_typedef_name(char *name)
 {
     return (boolean) (find_symbol(typedef_names, name) != NULL);
 }
@@ -468,7 +470,7 @@ is_typedef_name (char *name)
  * current line number.
  */
 static void
-update_line_num (void)
+update_line_num(void)
 {
     char *p = yytext;
     while (*p != '\0') {
@@ -480,11 +482,11 @@ update_line_num (void)
 /* Save the matched text in the temporary file.
  */
 static void
-save_text (void)
+save_text(void)
 {
 #if OPT_LINTLIBRARY
     if (!in_cpp)
-    	copy_typedef(yytext);
+	copy_typedef(yytext);
 #endif
     if (cur_file->convert) {
 	fputs(yytext, cur_file->tmp_file);
@@ -495,9 +497,9 @@ save_text (void)
  * to the file.
  */
 static void
-save_text_offset (void)
+save_text_offset(void)
 {
-    (void)strcpy(yylval.text.text, yytext);
+    (void) strcpy(yylval.text.text, yytext);
 #if OPT_LINTLIBRARY
     copy_typedef(yytext);
 #endif
@@ -505,21 +507,21 @@ save_text_offset (void)
 	yylval.text.begin = ftell(cur_file->tmp_file);
 	fputs(yytext, cur_file->tmp_file);
     } else
-    	yylval.text.begin = 0;
+	yylval.text.begin = 0;
 }
 
 #if OPT_LINTLIBRARY
 /* Decipher comments that are useful for lint (and making lint-libraries)
  */
 static struct {
-    int	varText;
-    int	varargs;
-    int	externs;
-    int	preproz;
+    int varText;
+    int varargs;
+    int externs;
+    int preproz;
 } cmtVal;
 
 static int
-decipher_comment (char *keyword, int len)
+decipher_comment(char *keyword, int len)
 {
     if (len != 0) {
 	int value;
@@ -542,7 +544,7 @@ decipher_comment (char *keyword, int len)
 	} else if (sscanf(keyword, "SCANFLIKE%d", &value) == 1) {
 	    cmtVal.varargs = value;
 	    cmtVal.varText = TRUE;
-	/* these are extensions added to simplify library-generation */
+	    /* these are extensions added to simplify library-generation */
 	} else if (!strcmp(keyword, "LINT_EXTERN")) {
 	    cmtVal.externs = MAX_INC_DEPTH;
 	} else if (sscanf(keyword, "LINT_EXTERN%d", &value) == 1) {
@@ -560,7 +562,7 @@ decipher_comment (char *keyword, int len)
 #endif
 
 static void
-put_quoted (int c)
+put_quoted(int c)
 {
     /* Modifying 'yytext[]' doesn't work well with FLEX, which simply
      * maintains 'yytext' as a pointer into its input buffer.  LEX copies
@@ -568,7 +570,7 @@ put_quoted (int c)
      */
 #if defined(FLEX_SCANNER) || !defined(YYLMAX)
     if (c != 0) {
-	static char	temp[2];
+	static char temp[2];
 	temp[0] = (char) c;
 	/* save_text */
 # if OPT_LINTLIBRARY
@@ -582,10 +584,9 @@ put_quoted (int c)
 	if (c == '\n')
 	    cur_file->line_num++;
     }
+#else /* this works fine on LEX (e.g., on SunOS 4.x) */
 
-#else	/* this works fine on LEX (e.g., on SunOS 4.x) */
-
-    if ((c == 0) || (yyleng+1 >= YYLMAX)) {
+    if ((c == 0) || (yyleng + 1 >= YYLMAX)) {
 	save_text();
 	update_line_num();
 	yyleng = 0;
@@ -594,7 +595,7 @@ put_quoted (int c)
 	yytext[yyleng++] = c;
 	yytext[yyleng] = 0;
     }
-#endif	/* LEX/FLEX */
+#endif /* LEX/FLEX */
 }
 
 /*
@@ -604,10 +605,10 @@ put_quoted (int c)
  * we don't try to eat them in the lexical rules.
  */
 static void
-get_quoted (void)
+get_quoted(void)
 {
-    int	delim = *yytext;
-    int	c;
+    int delim = *yytext;
+    int c;
 
 #if defined(FLEX_SCANNER) || !defined(YYLMAX)
     put_quoted(delim);
@@ -635,7 +636,7 @@ get_quoted (void)
 /* Scan to end of comment.
  */
 static void
-get_comment (void)
+get_comment(void)
 {
     int c, lastc = '\0';
 
@@ -659,8 +660,8 @@ get_comment (void)
 	    int flag = cmtVal.preproz;
 	    len = (unsigned) decipher_comment(keyword, (int) len);
 	    if (flag != cmtVal.preproz)
-	    	lastc = '\0';
-	} else if (len+1 < sizeof(keyword)) {
+		lastc = '\0';
+	} else if (len + 1 < sizeof(keyword)) {
 	    keyword[len++] = (char) c;
 	}
 #endif
@@ -688,10 +689,10 @@ get_comment (void)
 		    }
 		}
 #if OPT_LINTLIBRARY
-		(void)decipher_comment(keyword, (int) len);
+		(void) decipher_comment(keyword, (int) len);
 		if (cmtVal.varargs != 0) {
 		    if ((varargs_num = cmtVal.varargs) != 0
-		     && cmtVal.varText != 0) {
+			&& cmtVal.varText != 0) {
 			if (varargs_str != 0)
 			    free(varargs_str);
 			varargs_str = xstrdup(keyword);
@@ -720,7 +721,7 @@ get_comment (void)
  * in temp_buf.
  */
 static void
-get_cpp_directive (int copy)
+get_cpp_directive(int copy)
 {
     unsigned used = 0;
     char c, lastc[4];
@@ -766,7 +767,7 @@ get_cpp_directive (int copy)
  * the sscanf gave the whole buffer.
  */
 static void
-parsing_file_name (unsigned need)
+parsing_file_name(unsigned need)
 {
     need += 2;
     if (cur_file->len_file_name < need) {
@@ -779,7 +780,7 @@ parsing_file_name (unsigned need)
 /* Return a pointer to the current file name.
  */
 char *
-cur_file_name (void)
+cur_file_name(void)
 {
     return cur_file->file_name;
 }
@@ -787,7 +788,7 @@ cur_file_name (void)
 /* Return the current line number.
  */
 unsigned
-cur_line_num (void)
+cur_line_num(void)
 {
     return cur_file->line_num;
 }
@@ -795,7 +796,7 @@ cur_line_num (void)
 /* Return the current temporary output file.
  */
 FILE *
-cur_tmp_file (void)
+cur_tmp_file(void)
 {
     return cur_file->tmp_file;
 }
@@ -803,7 +804,7 @@ cur_tmp_file (void)
 /* Set the modify flag for the current file.
  */
 void
-cur_file_changed (void)
+cur_file_changed(void)
 {
     cur_file->changed = TRUE;
 }
@@ -811,7 +812,7 @@ cur_file_changed (void)
 /* Return the temporary file offset of beginning of the current comment.
  */
 long
-cur_begin_comment (void)
+cur_begin_comment(void)
 {
     return cur_file->begin_comment;
 }
@@ -819,7 +820,7 @@ cur_begin_comment (void)
 /* Return the text of the current lexical token.
  */
 char *
-cur_text (void)
+cur_text(void)
 {
     return yytext;
 }
@@ -836,24 +837,21 @@ cur_text (void)
  * note - this was in version 3.10 from 1993 - TD
  */
 FILE *
-tmpfile (void)
+tmpfile(void)
 {
     char *name;
     char *tmpdir;
     FILE *f;
 
-    if ((tmpdir = getenv("TMPDIR")) == (char *)0)
-    {
+    if ((tmpdir = getenv("TMPDIR")) == (char *) 0) {
 	tmpdir = "/tmp";
     }
     name = xmalloc(strlen(tmpdir) + 20);
     sprintf(name, "%s/TfXXXXXX", tmpdir);
     call_mktemp(name);
 
-    if ((f = fopen(name, "w+")) != 0)
-    {
-	if (unlink(name) == -1)
-	{
+    if ((f = fopen(name, "w+")) != 0) {
+	if (unlink(name) == -1) {
 	    fclose(f);
 	    f = 0;
 	}
@@ -867,8 +865,8 @@ tmpfile (void)
  * point to the file.
  */
 static void
-include_file (char *name,	/* file name */
-	      int convert)	/* if TRUE, convert function definitions */
+include_file(char *name,	/* file name */
+	     int convert)	/* if TRUE, convert function definitions */
 {
     if (++inc_depth >= (int) inc_limit) {
 	unsigned need = (inc_limit | 31) + 1;
@@ -914,7 +912,7 @@ include_file (char *name,	/* file name */
 /* Copy converted C source from the temporary file to the output stream.
  */
 static void
-put_file (FILE *outf)
+put_file(FILE *outf)
 {
     char block[BLOCK_SIZE];
     long filesize;
@@ -923,7 +921,7 @@ put_file (FILE *outf)
     filesize = ftell(cur_file->tmp_file);
     fseek(cur_file->tmp_file, 0L, 0);
     while (filesize > 0) {
-	count = (filesize < BLOCK_SIZE) ? (size_t)filesize : BLOCK_SIZE;
+	count = (filesize < BLOCK_SIZE) ? (size_t) filesize : BLOCK_SIZE;
 	nread = fread(block, sizeof(char), count, cur_file->tmp_file);
 	if (nread == 0)
 	    break;
@@ -935,7 +933,7 @@ put_file (FILE *outf)
 /* Remove the top of the include stack.
  */
 void
-pop_file (int closed)
+pop_file(int closed)
 {
     FILE *outf;
 
@@ -951,7 +949,7 @@ pop_file (int closed)
 		fclose(outf);
 	    } else {
 		fprintf(stderr, "%s: cannot create file %s\n", progname,
-		 cur_file->base_name);
+			cur_file->base_name);
 	    }
 	}
 
@@ -977,9 +975,9 @@ pop_file (int closed)
 /* Process include directive.
  */
 static void
-do_include (char *file_spec) 	/* path surrounded by "" or <> */
+do_include(char *file_spec)	/* path surrounded by "" or <> */
 {
-    unsigned stdinc; 	/* 1 = path surrounded by <> */
+    unsigned stdinc;		/* 1 = path surrounded by <> */
     char *file;
     char *path;
     char match, *s;
@@ -996,8 +994,8 @@ do_include (char *file_spec) 	/* path surrounded by "" or <> */
     } else {
 	return;
     }
-    s = strchr(file_spec+1, match);
-    n = (s != NULL) ? (unsigned)(s - file_spec - 1) : 0;
+    s = strchr(file_spec + 1, match);
+    n = (s != NULL) ? (unsigned) (s - file_spec - 1) : 0;
     file = xstrdup(file_spec + 1);
     file[n] = '\0';
 
@@ -1011,7 +1009,8 @@ do_include (char *file_spec) 	/* path surrounded by "" or <> */
 	    if (strlen(inc_dir[i]) == 0 || !strcmp(inc_dir[i], CURRENT_DIR)) {
 		strcpy(path, file);
 	    } else {
-		path = (char *) xrealloc(path, strlen(file) + strlen(inc_dir[i]) + 2);
+		path = (char *) xrealloc(path, strlen(file) +
+					 strlen(inc_dir[i]) + 2);
 		sprintf(path, "%s/%s", inc_dir[i], file);
 	    }
 	    if ((fp = fopen(path, "r")) != NULL) {
@@ -1036,7 +1035,7 @@ do_include (char *file_spec) 	/* path surrounded by "" or <> */
  * nested include file.
  */
 int
-yywrap (void)
+yywrap(void)
 {
     if (inc_depth > 0) {
 	pop_file(FALSE);
@@ -1052,9 +1051,9 @@ free_lexer(void)
 {
     if (inc_limit != 0) {
 #ifdef FLEX_SCANNER
-	free (buffer_stack);
+	free(buffer_stack);
 #endif
-	free (inc_stack);
+	free(inc_stack);
     }
 }
 #endif

@@ -1,14 +1,11 @@
-/* $Id: lintlibs.c,v 4.17 2010/07/14 09:56:38 tom Exp $
+/* $Id: lintlibs.c,v 4.21 2011/01/02 19:24:03 tom Exp $
  *
  * C prototype/lint-library generator
  * These routines implement the semantic actions for lint libraries executed by
  * the yacc parser.
  */
-#include <stdio.h>
-#include <ctype.h>
-#include "cproto.h"
-#include "semantic.h"
-#include "symbol.h"
+#include <semantic.h>
+#include <symbol.h>
 
 #if OPT_LINTLIBRARY
 
@@ -404,8 +401,7 @@ track_in(void)
 /*
  * Copy/append to 'implied_buf[]'
  */
-static
-void
+static void
 add2implied_buf(const char *s, int append)
 {
     static size_t implied_len;	/* current strlen(implied_buf) */
@@ -592,7 +588,8 @@ int
 is_actual_func(Declarator * d)
 {
     if (lintLibrary() && (d->func_def != FUNC_NONE)) {
-	if (d->func_stack->text[0] == PAREN_L) {
+	if (d->func_stack->text[0] == PAREN_L
+	    && d->func_stack->text[1] == '*') {
 	    if (strstr(d->func_stack->text, "()") != 0)
 		return TRUE;
 	} else {

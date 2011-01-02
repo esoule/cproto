@@ -1,4 +1,4 @@
-/* $Id: semantic.h,v 4.5 2010/07/11 17:18:40 tom Exp $
+/* $Id: semantic.h,v 4.6 2011/01/02 19:03:03 tom Exp $
  *
  * Declarations of semantic action routines
  */
@@ -6,6 +6,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include <cproto.h>
 
 extern void new_decl_spec (
     DeclSpec *decl_spec, const char *text, long offset, int flags);

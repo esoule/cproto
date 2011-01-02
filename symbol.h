@@ -1,10 +1,12 @@
-/* $Id: symbol.h,v 4.3 2008/08/28 00:37:22 tom Exp $
+/* $Id: symbol.h,v 4.4 2011/01/02 19:17:41 tom Exp $
  *
  * A symbol table is a collection of string identifiers stored in a
  * hash table.
  */
 #ifndef SYMBOL_H
 #define SYMBOL_H
+
+#include <cproto.h>
 
 typedef struct symbol {
     struct symbol *next;	/* next symbol in list */

@@ -1,11 +1,9 @@
-/* $Id: dump.c,v 4.3 2010/07/14 09:58:22 tom Exp $
+/* $Id: dump.c,v 4.5 2011/01/02 19:17:15 tom Exp $
  *
  * useful dumps for cproto
  */
-#include <stdio.h>
-#include "cproto.h"
-#include "trace.h"
-#include "dump.h"
+#include <trace.h>
+#include <dump.h>
 
 static char *whatFuncDefStyle(FuncDefStyle func_def);
 static char *flagsDeclSpec(int flags);

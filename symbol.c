@@ -1,10 +1,8 @@
-/* $Id: symbol.c,v 4.7 2010/07/14 09:57:37 tom Exp $
+/* $Id: symbol.c,v 4.9 2011/01/02 19:17:15 tom Exp $
  *
  * Implements a symbol table abstract data type.
  */
-#include <stdio.h>
-#include "cproto.h"
-#include "symbol.h"
+#include <symbol.h>
 
 /* Create a symbol table.
  * Return a pointer to the symbol table or NULL if an error occurs.

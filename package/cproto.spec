@@ -1,7 +1,7 @@
 Summary:  cproto - generate C function prototypes and convert function definitions
 %define AppProgram cproto
-%define AppVersion 4.7i
-# $XTermId: cproto.spec,v 1.1 2010/07/14 08:22:18 tom Exp $
+%define AppVersion 4.7j
+# $XTermId: cproto.spec,v 1.3 2011/01/02 19:42:57 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: 1
@@ -50,6 +50,9 @@ strip $RPM_BUILD_ROOT%{_bindir}/%{AppProgram}
 
 %changelog
 # each patch should add its ChangeLog entries here
+
+* Sun Jan 02 2011 Thomas Dickey
+- cproto 4.7j
 
 * Wed Jul 14 2010 Thomas Dickey
 - initial version

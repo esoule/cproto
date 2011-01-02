@@ -1,11 +1,9 @@
-/* $Id: strkey.c,v 4.6 2010/07/14 09:58:04 tom Exp $
+/* $Id: strkey.c,v 4.9 2011/01/02 19:24:03 tom Exp $
  *
  * Some string handling routines
  */
-#include <stdio.h>
-#include <ctype.h>
 #include <string.h>
-#include "cproto.h"
+#include <cproto.h>
 
 #define	LETTER(c) (isalnum(UCH(c)) || (c == '_') || (c == '$'))
 

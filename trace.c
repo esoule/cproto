@@ -1,4 +1,4 @@
-/* $Id: trace.c,v 4.4 2010/07/14 09:58:14 tom Exp $
+/* $Id: trace.c,v 4.6 2011/01/02 19:28:44 tom Exp $
  *
  * Simple malloc debugging (for finding leaks)
  *
@@ -6,10 +6,6 @@
  * requires an ANSI compiler.  Its main purpose is to allow tracing problems in
  * a repeatable test, including malloc/free bugs -- T.Dickey
  */
-#if HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <trace.h>		/* interface of this module */
 
 #if	DOALLOC
@@ -19,7 +15,6 @@
 #endif /* DOALLOC */
 
 #include <stdlib.h>
-#include <stdio.h>
 
 #if TIME_WITH_SYS_TIME
 # include <sys/time.h>

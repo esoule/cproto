@@ -1,4 +1,13 @@
--- $Id: CHANGES,v 4.31 2010/07/14 09:42:59 tom Exp $
+-- $Id: CHANGES,v 4.34 2011/01/02 19:40:35 tom Exp $
+
+2011/01/02 (4.7j)
+- amend a check for function name to allow cases such as this:
+  int (foo)();
+  which is distinct from a function-pointer, e.g.,
+  int (*foo)();
+- modified configure script to deprecate ${name-value} in favor of standard
+  ${name:-value}.
+- update config.guess, config.sub
 
 2010/07/14 (4.7i)
 - escape dashes used in manpage, to work with groff (patch by Kenneth

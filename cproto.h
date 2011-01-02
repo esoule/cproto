@@ -1,4 +1,4 @@
-/* $Id: cproto.h,v 4.15 2010/07/14 09:17:42 tom Exp $
+/* $Id: cproto.h,v 4.17 2011/01/02 19:30:39 tom Exp $
  *
  * Declarations for C function prototype generator
  */
@@ -6,7 +6,7 @@
 #define CPROTO_H
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif
 
 #ifndef BISON_HAS_YYTNAME
@@ -37,7 +37,31 @@
 #define HAVE_LIBDMALLOC 0
 #endif
 
-#include "system.h"
+#include <system.h>
+
+#ifndef GCC_PRINTFLIKE
+#if defined(GCC_PRINTF) && !defined(printf)
+#define GCC_PRINTFLIKE(fmt,var) __attribute__((format(printf,fmt,var)))
+#else
+#define GCC_PRINTFLIKE(fmt,var)	/*nothing */
+#endif
+#endif
+
+#ifndef GCC_SCANFLIKE
+#if defined(GCC_SCANF) && !defined(scanf)
+#define GCC_SCANFLIKE(fmt,var)  __attribute__((format(scanf,fmt,var)))
+#else
+#define GCC_SCANFLIKE(fmt,var)	/*nothing */
+#endif
+#endif
+
+#ifndef	GCC_NORETURN
+#define	GCC_NORETURN		/* nothing */
+#endif
+
+#ifndef	GCC_UNUSED
+#define	GCC_UNUSED		/* nothing */
+#endif
 
 #if HAVE_LIBDMALLOC || HAVE_LIBDBMALLOC || defined(DOALLOC)
 #undef  NO_LEAKS
@@ -71,14 +95,14 @@ typedef char boolean;
 /* Source file text */
 typedef struct text {
     char text[MAX_TEXT_SIZE];	/* source text */
-    long begin; 		/* offset in temporary file */
+    long begin;			/* offset in temporary file */
 } Text;
 
 /* This is a list of function parameters. */
 typedef struct parameter_list {
     struct parameter *first;	/* pointer to first parameter in list */
-    struct parameter *last;	/* pointer to last parameter in list */  
-    long begin_comment; 	/* begin offset of comment */
+    struct parameter *last;	/* pointer to last parameter in list */
+    long begin_comment;		/* begin offset of comment */
     long end_comment;		/* end offset of comment */
     char *comment;		/* comment at start of parameter list */
 } ParameterList;
@@ -96,8 +120,8 @@ typedef struct parameter_list {
 /* This structure stores information about a declaration specifier. */
 typedef struct decl_spec {
     unsigned short flags;	/* flags defined above */
-    char *text; 		/* source text */
-    long begin; 		/* offset in temporary file */
+    char *text;			/* source text */
+    long begin;			/* offset in temporary file */
 } DeclSpec;
 
 /* Styles of function definitions */
@@ -114,23 +138,23 @@ typedef int FuncDefStyle;
 
 /* This structure stores information about a declarator. */
 typedef struct declarator {
-    char *name; 			/* name of variable or function */
-    char *text; 			/* source text */
-    long begin; 			/* offset in temporary file */
-    long begin_comment; 		/* begin offset of comment */
-    long end_comment;			/* end offset of comment */
-    FuncDefStyle func_def;		/* style of function definition */
-    ParameterList params;		/* function parameters */
-    boolean pointer;			/* TRUE if it declares a pointer */
-    struct declarator *head;		/* head function declarator */
+    char *name;			/* name of variable or function */
+    char *text;			/* source text */
+    long begin;			/* offset in temporary file */
+    long begin_comment;		/* begin offset of comment */
+    long end_comment;		/* end offset of comment */
+    FuncDefStyle func_def;	/* style of function definition */
+    ParameterList params;	/* function parameters */
+    boolean pointer;		/* TRUE if it declares a pointer */
+    struct declarator *head;	/* head function declarator */
     struct declarator *func_stack;	/* stack of function declarators */
-    struct declarator *next;		/* next declarator in list */
+    struct declarator *next;	/* next declarator in list */
 } Declarator;
 
 /* This is a list of declarators. */
 typedef struct declarator_list {
     Declarator *first;		/* pointer to first declarator in list */
-    Declarator *last;		/* pointer to last declarator in list */  
+    Declarator *last;		/* pointer to last declarator in list */
 } DeclaratorList;
 
 /* This structure stores information about a function parameter. */
@@ -231,57 +255,57 @@ extern char base_file[];
 
 /* cproto.c */
 #if HAVE_LIBDBMALLOC
-extern void ExitProgram     (int code);
+extern void ExitProgram(int code);
 #define exit(code) ExitProgram(code)
 #endif
 #if !HAVE_LIBDMALLOC
 #ifdef NO_LEAKS
-extern void *xRealloc       (void *p, unsigned n, char *f, int l);
-extern void *xMalloc        (unsigned n, char *f, int l);
-extern char *xStrdup        (const char *s, char *f, int l);
+extern void *xRealloc(void *p, unsigned n, char *f, int l);
+extern void *xMalloc(unsigned n, char *f, int l);
+extern char *xStrdup(const char *s, char *f, int l);
 #define xrealloc(p,n)       xRealloc(p, n, __FILE__, __LINE__)
 #define xmalloc(n)          xMalloc(n, __FILE__, __LINE__)
 #define xstrdup(s)          xStrdup(s, __FILE__, __LINE__)
 #else
-extern void *xrealloc       (void *p, size_t n);
-extern void *xmalloc        (size_t n);
-extern char *xstrdup        (const char *src);
+extern void *xrealloc(void *p, size_t n);
+extern void *xmalloc(size_t n);
+extern char *xstrdup(const char *src);
 #endif
 #endif /* !HAVE_LIBDMALLOC */
-extern void put_error       (void);
-extern int is_path_sep      (int ch);
-extern char *trim_path_sep  (char *s);
+extern void put_error(void);
+extern int is_path_sep(int ch);
+extern char *trim_path_sep(char *s);
 
 /* lintlibs.c */
 #if OPT_LINTLIBRARY
-extern void put_string      (FILE *outf, const char *s);
-extern void put_char        (FILE *outf, int c);
-extern void put_newline     (FILE *outf);
-extern void put_blankline   (FILE *outf);
-extern void put_padded      (FILE *outf, const char *s);
-extern void fmt_library     (int code);
-extern void begin_tracking  (void);
-extern int already_declared (char *name);
-extern void track_in        (void);
-extern int want_typedef     (void);
-extern void begin_typedef   (void);
-extern void copy_typedef    (const char *s);
-extern void end_typedef     (void);
-extern void imply_typedef   (const char *s);
-extern char *implied_typedef (void);
-extern void indent          (FILE *outf);
-extern int lint_ellipsis    (Parameter *p);
+extern void put_string(FILE *outf, const char *s);
+extern void put_char(FILE *outf, int c);
+extern void put_newline(FILE *outf);
+extern void put_blankline(FILE *outf);
+extern void put_padded(FILE *outf, const char *s);
+extern void fmt_library(int code);
+extern void begin_tracking(void);
+extern int already_declared(char *name);
+extern void track_in(void);
+extern int want_typedef(void);
+extern void begin_typedef(void);
+extern void copy_typedef(const char *s);
+extern void end_typedef(void);
+extern void imply_typedef(const char *s);
+extern char *implied_typedef(void);
+extern void indent(FILE *outf);
+extern int lint_ellipsis(Parameter * p);
 #if OPT_LINTLIBRARY
-extern void flush_varargs   (void);
+extern void flush_varargs(void);
 #else
-#define flush_varargs() /* nothing */
+#define flush_varargs()		/* nothing */
 #endif
-extern void ellipsis_varargs (Declarator *d);
-extern char *supply_parm    (int count);
-extern int is_actual_func   (Declarator *d);
-extern void put_body        (FILE *outf, DeclSpec *decl_spec, Declarator *declarator);
+extern void ellipsis_varargs(Declarator * d);
+extern char *supply_parm(int count);
+extern int is_actual_func(Declarator * d);
+extern void put_body(FILE *outf, DeclSpec * decl_spec, Declarator * declarator);
 # ifdef NO_LEAKS
-extern void free_lintlibs   (void);
+extern void free_lintlibs(void);
 # endif
 #else
 #define put_string(fp,S)    fputs(S, fp)
@@ -297,23 +321,23 @@ extern void free_lintlibs   (void);
 #endif
 
 /* strkey.c */
-extern char *strkey         (char *src, const char *key);
-extern void strcut          (char *src, const char *key);
+extern char *strkey(char *src, const char *key);
+extern void strcut(char *src, const char *key);
 
 /* grammar.y */
-extern boolean is_typedef_name (char *name);
-extern char *cur_file_name  (void);
-extern unsigned cur_line_num (void);
-extern FILE *cur_tmp_file   (void);
-extern void cur_file_changed (void);
-extern long cur_begin_comment (void);
-extern char *cur_text       (void);
-extern void pop_file        (int closed);
-extern void init_parser     (void);
-extern void process_file    (FILE *infile, const char *name);
+extern boolean is_typedef_name(char *name);
+extern char *cur_file_name(void);
+extern unsigned cur_line_num(void);
+extern FILE *cur_tmp_file(void);
+extern void cur_file_changed(void);
+extern long cur_begin_comment(void);
+extern char *cur_text(void);
+extern void pop_file(int closed);
+extern void init_parser(void);
+extern void process_file(FILE *infile, const char *name);
 #ifdef NO_LEAKS
-extern void free_lexer      (void);
-extern void free_parser     (void);
+extern void free_lexer(void);
+extern void free_parser(void);
 #endif
 
 /* workaround for one of the bugs in bison 1.875 */

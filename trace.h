@@ -1,14 +1,12 @@
-/* $Id: trace.h,v 4.3 2002/01/26 00:19:28 tom Exp $ */
+/* $Id: trace.h,v 4.4 2011/01/02 18:59:05 tom Exp $ */
 
 #ifndef TRACE_H
 #define TRACE_H
 
-#if !defined(__GNUC__) && !defined(__attribute__)
-#define __attribute__(p)
-#endif
+#include <cproto.h>
 
 extern void Where(char *f, int n);
-extern void Trace(char *f, ...) __attribute__((format (printf,1,2)));
+extern void Trace(char *f, ...) GCC_PRINTFLIKE(1,2);
 extern void show_alloc(void);
 extern void Elapsed(char *msg);
 extern void WalkBack(void);

@@ -105,7 +105,8 @@ _FIRST	*func2(
 		{ return(*(_FIRST **)0); }
 
 #undef func_func
-int	*(func_func)(void);
+int	*(func_func)(void)
+		{ return(*(int **)0); }
 
 typedef int bool;
 

@@ -183,6 +183,7 @@ char P2;	{ return(1); }
 
 int	dots_4();
 char *dots_5();
+char *(dots_6)();
 
 extern	_FIRST *xdots_0();
 

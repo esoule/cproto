@@ -145,6 +145,7 @@ int	array[][10][20];
 
 int	dots_4(int,char, char *);
 char *	dots_5(int,char, char *, ...);
+char *	(dots_6)(int,char, char *, ...);
 
 extern	_FIRST *xdots_0(p1);
 

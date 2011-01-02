@@ -1,10 +1,13 @@
-/* $Id: system.h,v 4.11 2005/12/09 00:51:10 tom Exp $
+/* $Id: system.h,v 4.13 2011/01/02 19:23:38 tom Exp $
  *
  * cproto configuration and system dependencies
  */
 #ifndef	SYSTEM_H
 #define	SYSTEM_H
  
+#include <stdio.h>
+#include <ctype.h>
+
 #ifndef TRUE
 #define	TRUE	(1)
 #endif
@@ -88,6 +91,18 @@
 /* Set configuration parameters for systems on which we cannot run autoconf.
  * (Assumes Posix unless overridden).
  */
+#ifndef HAVE_GETOPT_H
+#define HAVE_GETOPT_H 0
+#endif 
+
+#ifndef HAVE_LIBDBMALLOC
+#define HAVE_LIBDBMALLOC 0
+#endif
+
+#ifndef HAVE_LIBDMALLOC
+#define HAVE_LIBDMALLOC 0
+#endif
+
 #ifndef HAVE_STDLIB_H
 #define HAVE_STDLIB_H 1
 #endif
@@ -100,9 +115,13 @@
 #define HAVE_STRSTR 1
 #endif
 
-#ifndef HAVE_GETOPT_H
-#define HAVE_GETOPT_H 0
-#endif 
+#ifndef HAVE_UNISTD_H
+#define HAVE_UNISTD_H 0
+#endif
+
+#ifndef STDC_HEADERS
+#define STDC_HEADERS 1
+#endif
 
 /* Default C preprocessor on UNIX systems */
 #ifndef MSDOS
