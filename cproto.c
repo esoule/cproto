@@ -1,8 +1,8 @@
-/* $Id: cproto.c,v 4.33 2011/01/02 19:24:03 tom Exp $
+/* $Id: cproto.c,v 4.35 2013/10/25 21:51:35 tom Exp $
  *
  * C function prototype generator and function definition converter
  */
-#define VERSION "4.7j"
+#define VERSION "4.7k"
 
 #include <cproto.h>
 
@@ -104,8 +104,8 @@ char **inc_dir = 0;
 #ifdef CPP
 # if !HAVE_POPEN_PROTOTYPE
 extern FILE *popen(const char *c, const char *m);
-# endif
 extern int pclose(FILE *p);
+# endif
 static size_t cpp_len;
 static const char *cpp = CPP;
 static char *cpp_opt;

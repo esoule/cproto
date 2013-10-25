@@ -1,7 +1,12 @@
+/* $Id: getopt.c,v 4.2 2013/10/25 22:08:08 tom Exp $ */
+
 /* ::[[ @(#) getopt.c 1.5 89/03/11 05:40:23 ]]:: */
+
+/*
 #ifndef LINT
 static char sccsid[]="::[[ @(#) getopt.c 1.5 89/03/11 05:40:23 ]]::";
 #endif
+*/
 
 /*
  * Here's something you've all been waiting for:  the AT&T public domain
@@ -23,17 +28,11 @@ static char sccsid[]="::[[ @(#) getopt.c 1.5 89/03/11 05:40:23 ]]::";
  * However, I am not about to post a copy of anything licensed by AT&T.
  */
 
-#ifdef ANSIPROTO
-int strcmp (char *, char *);
-char *strchr (char *, char);
-#endif
-
 #include <stdio.h>
+#include <string.h>
+#include <getopt.h>
 
 #define ERR(szz,czz) if(opterr){fprintf(stderr,"%s%s%c\n",argv[0],szz,czz);}
-
-extern int strcmp();
-extern char *strchr();
 
 int   opterr = 1;
 int   optind = 1;
@@ -41,15 +40,13 @@ int   optopt;
 char  *optarg;
 
 int
-getopt(argc, argv, opts)
-int   argc;
-char  **argv, *opts;
+getopt(int argc, char **argv, const char *opts)
 {
    static int sp = 1;
    register int c;
    register char *cp;
 
-   if(sp == 1)
+   if(sp == 1) {
       if(optind >= argc ||
          argv[optind][0] != '-' || argv[optind][1] == '\0')
          return(EOF);
@@ -57,7 +54,8 @@ char  **argv, *opts;
          optind++;
          return(EOF);
       }
-   optopt = c = argv[optind][sp];
+   }
+   optopt = (c = argv[optind][sp]);
    if(c == ':' || (cp=strchr(opts, c)) == NULL) {
       ERR(": illegal option -- ", c);
       if(argv[optind][++sp] == '\0') {

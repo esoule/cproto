@@ -11,7 +11,7 @@ Current cproto upstream maintainer: Thomas Dickey <dickey@invisible-island.net>
 
 Files: aclocal.m4
 Licence: other-BSD
-Copyright:  1994-2010,2011 by Thomas E. Dickey
+Copyright:  1994-2011,2013 by Thomas E. Dickey
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the
     "Software"), to deal in the Software without restriction, including
@@ -72,7 +72,7 @@ Licence: other-BSD
     shared with many OS's install programs.
 
 Files: debian/*
-Copyright:  2010 Thomas E. Dickey
+Copyright:  2010-2011,2013 Thomas E. Dickey
 Licence: other-BSD
     Permission to use, copy, modify, and distribute this software and its
     documentation for any purpose and without fee is hereby granted,

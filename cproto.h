@@ -1,4 +1,4 @@
-/* $Id: cproto.h,v 4.17 2011/01/02 19:30:39 tom Exp $
+/* $Id: cproto.h,v 4.18 2013/10/25 20:28:26 tom Exp $
  *
  * Declarations for C function prototype generator
  */
@@ -23,6 +23,10 @@
 
 #ifndef YACC_HAS_YYTOKS_2
 #define YACC_HAS_YYTOKS_2 0
+#endif
+
+#ifndef HAVE_LINK
+#define HAVE_LINK 0
 #endif
 
 #ifndef HAVE_POPEN_PROTOTYPE

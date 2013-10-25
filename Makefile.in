@@ -1,9 +1,9 @@
-# $Id: Makefile.in,v 4.16 2010/07/12 00:43:24 tom Exp $
+# $Id: Makefile.in,v 4.19 2013/10/25 22:23:29 tom Exp $
 #
 # UNIX template-makefile for C prototype generator
 
 THIS = cproto
-RELEASE = 4_7g
+RELEASE = 4_7k
 
 #### Start of system configuration section. ####
 
@@ -29,6 +29,7 @@ LIBS		= @LIBS@ @LEXLIB@
 
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
+datarootdir	= @datarootdir@
 
 bindir		= @bindir@
 mandir		= @mandir@
@@ -159,6 +160,12 @@ dist: MANIFEST
 
 default.h: $(C_FILES) lex.yy.c
 	./$(PROG) -e -v -m -M ARGS -d $(DEFINES) $(C_FILES) grammar.y >$@
+
+getopt.o : $(srcdir)/porting/getopt.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $(srcdir)/porting/getopt.c
+
+popen.o : $(srcdir)/porting/popen.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $(srcdir)/porting/popen.c
 
 lint: $(C_FILES) $(JUNK)
 	$(LINT) $(CPPFLAGS) $(C_FILES) y.tab.c >$@.out

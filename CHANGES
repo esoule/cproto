@@ -1,4 +1,14 @@
--- $Id: CHANGES,v 4.34 2011/01/02 19:40:35 tom Exp $
+-- $Id: CHANGES,v 4.39 2013/10/25 23:37:17 tom Exp $
+
+2013/10/25 (4.7k)
+- modify configure script, etc., to support cross-compiles, e.g., to MinGW.
+- updated configure macros
+  - support --datarootdir option
+  - various portability fixes for CF_XOPEN_SOURCE
+  - add checks for clang
+  - improve macros for checking for standard C compiler 
+  - modified macros to support third parameter of AC_DEFINE used by autoheader
+- update config.guess, config.sub
 
 2011/01/02 (4.7j)
 - amend a check for function name to allow cases such as this:
@@ -25,15 +35,15 @@
   contributor's information using a script.
 - update config.guess, config.sub
 
-2009/09/3 (4.7h)
+2009/09/03 (4.7h)
 - updated configure macros CF_ADD_CFLAGS CF_GCC_ATTRIBUTES CF_GCC_WARNINGS
   CF_XOPEN_SOURCE
 - update config.guess, config.sub
 
 2008/11/19 (4.7g)
 - modify cpp command to redirect stderr to /dev/null if -q option is given,
-  for consistency with the non-cpp mode (report by Nicolas Limare).
-  https://bugs.launchpad.net/ubuntu/+source/cproto/+bug/275248
+  for consistency with the non-cpp mode (report by Nicolas Limare,
+  Ubuntu #275248).
 - add configure --disable-leaks option.
 - use configure macro CF_XOPEN_SOURCE macro to make mkstemp() prototyped on
   Linux.
@@ -41,7 +51,7 @@
 - code cleanup, to remove K&R relics.
 - update config.guess, config.sub
 
-2008/01/1 (4.7f)
+2008/01/01 (4.7f)
 - add symbol for __gnuc_va_list
 - add some data for c99 syntax to test-cases, e.g., long long.
 - review/fix some additional places where need_temp() call is needed.
@@ -52,7 +62,7 @@
 - update config.guess, config.sub
 - rename install.sh to install-sh
 
-2005/12/8 (4.7e)
+2005/12/08 (4.7e)
 - eliminate some fixed limits on buffer sizes (prompted by FreeBSD port).
 - eliminate fixed limit on include nesting.
 - use configure check for mkstemp(), use that function in preference to
@@ -88,13 +98,13 @@
 - updated configure script, using autoconf 2.52 + patch, along with macros from
   vile/lynx/etc.
 
-2004/03/9 (4.7b)
+2004/03/09 (4.7b)
 - added new -X option to limit the levels of include-files from which an
   extern can come (Debian #235824).
 - added new -i option to support inline function prototypes (Debian #228801,
   patch by Kenneth Pronovici).
 
-2003/04/5 (4.7a)
+2003/04/05 (4.7a)
 
 - add definition of YYFLAG, to enable the error-reporting code with bison 1.875
 - add definition of YYSTYPE, to allow this to build with recent (aka "broken")
@@ -121,7 +131,7 @@
 - remove makefile rules to make shar files (comp.sources.misc is long gone).
 - stop using changequote(), workaround for bugs in autoconf 2.5x
 
-2000/11/9 (4.7)
+2000/11/09 (4.7)
 - Report source file and line number in error messages in gcc-style format.
 
 2000/08/10 (4.6d)
@@ -132,7 +142,7 @@
   independently of $(prefix) and $(exec_prefix) (patch by Carsten Leonhardt
   <leo@debian.org>).
 
-2000/07/8 (4.6c)
+2000/07/08 (4.6c)
 - add a clause to handle "__extension__" before extern declarations.
   (report by Bob van der Poel <bvdpoel@uniserve.com>)
 
