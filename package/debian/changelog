@@ -1,3 +1,9 @@
+cproto (4.7l) unstable; urgency=low
+
+  * correct configure-check for yyname vs yytname
+
+ -- Thomas E. Dickey <dickey@invisible-island.net>  Wed, 01 Jan 2014 10:31:44 -0500
+
 cproto (4.7k) unstable; urgency=low
 
   * update configure scripts

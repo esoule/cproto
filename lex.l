@@ -2,7 +2,7 @@
 
 %{
 
-/* $Id: lex.l,v 4.22 2011/01/02 18:31:53 tom Exp $
+/* $Id: lex.l,v 4.23 2014/01/01 16:01:46 tom Exp $
  *
  * Lexical analyzer for C function prototype generator
  *
@@ -994,7 +994,7 @@ do_include(char *file_spec)	/* path surrounded by "" or <> */
     } else {
 	return;
     }
-    s = strchr(file_spec + 1, match);
+    s = (strchr) (file_spec + 1, match);
     n = (s != NULL) ? (unsigned) (s - file_spec - 1) : 0;
     file = xstrdup(file_spec + 1);
     file[n] = '\0';

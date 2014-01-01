@@ -1,8 +1,8 @@
-dnl $Id: aclocal.m4,v 4.20 2013/10/25 22:26:08 tom Exp $
+dnl $Id: aclocal.m4,v 4.23 2014/01/01 15:43:19 tom Exp $
 dnl
 dnl Macros for cproto configure script
 dnl ---------------------------------------------------------------------------
-dnl Copyright (c) 1994-2011,2013 Thomas E. Dickey
+dnl Copyright (c) 1994-2013,2014 Thomas E. Dickey
 dnl
 dnl Permission is hereby granted, free of charge, to any person obtaining a
 dnl copy of this software and associated documentation files (the "Software"),
@@ -232,7 +232,7 @@ if test ".$system_name" != ".$cf_cv_system_name" ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CLANG_COMPILER version: 1 updated: 2012/06/16 14:55:39
+dnl CF_CLANG_COMPILER version: 2 updated: 2013/11/19 19:23:35
 dnl -----------------
 dnl Check if the given compiler is really clang.  clang's C driver defines
 dnl __GNUC__ (fooling the configure script into setting $GCC to yes) but does
@@ -243,7 +243,7 @@ dnl ensure that it is not mistaken for gcc/g++.  It is normally invoked from
 dnl the wrappers for gcc and g++ warnings.
 dnl
 dnl $1 = GCC (default) or GXX
-dnl $2 = INTEL_COMPILER (default) or INTEL_CPLUSPLUS
+dnl $2 = CLANG_COMPILER (default)
 dnl $3 = CFLAGS (default) or CXXFLAGS
 AC_DEFUN([CF_CLANG_COMPILER],[
 ifelse([$2],,CLANG_COMPILER,[$2])=no
@@ -449,7 +449,7 @@ if test "$GCC" = yes ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GCC_WARNINGS version: 29 updated: 2012/06/16 14:55:39
+dnl CF_GCC_WARNINGS version: 31 updated: 2013/11/19 19:23:35
 dnl ---------------
 dnl Check if the compiler supports useful warning options.  There's a few that
 dnl we don't use, simply because they're too noisy:
@@ -521,10 +521,14 @@ then
 	EXTRA_CFLAGS=
 	cf_warn_CONST=""
 	test "$with_ext_const" = yes && cf_warn_CONST="Wwrite-strings"
+	cf_gcc_warnings="Wignored-qualifiers Wlogical-op Wvarargs"
+	test "x$CLANG_COMPILER" = xyes && cf_gcc_warnings=
 	for cf_opt in W Wall \
 		Wbad-function-cast \
 		Wcast-align \
 		Wcast-qual \
+		Wdeclaration-after-statement \
+		Wextra \
 		Winline \
 		Wmissing-declarations \
 		Wmissing-prototypes \
@@ -532,7 +536,7 @@ then
 		Wpointer-arith \
 		Wshadow \
 		Wstrict-prototypes \
-		Wundef $cf_warn_CONST $1
+		Wundef $cf_gcc_warnings $cf_warn_CONST $1
 	do
 		CFLAGS="$cf_save_CFLAGS $EXTRA_CFLAGS -$cf_opt"
 		if AC_TRY_EVAL(ac_compile); then
@@ -632,6 +636,60 @@ cf_save_CFLAGS="$cf_save_CFLAGS -we147 -no-gcc"
 		;;
 	esac
 fi
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_MAKE_DOCS version: 2 updated: 2013/01/02 20:04:08
+dnl ------------
+dnl $1 = name(s) to generate rules for
+dnl $2 = suffix of corresponding manpages used as input.
+define([CF_MAKE_DOCS],[
+test -z "$cf_make_docs" && cf_make_docs=0
+
+cf_output=makefile
+test -f "$cf_output" || cf_output=Makefile
+
+if test "$cf_make_docs" = 0
+then
+cat >>$cf_output <<"CF_EOF"
+################################################################################
+.SUFFIXES : .html .$2 .man .ps .pdf .txt
+
+.$2.html :
+	GROFF_NO_SGR=stupid [$](SHELL) -c "tbl [$]*.$2 | groff -P -o0 -I$*_ -Thtml -man" >[$]@
+
+.$2.ps :
+	[$](SHELL) -c "tbl [$]*.$2 | groff -man" >[$]@
+
+.$2.txt :
+	GROFF_NO_SGR=stupid [$](SHELL) -c "tbl [$]*.$2 | nroff -Tascii -man | col -bx" >[$]@
+
+.ps.pdf :
+	ps2pdf [$]*.ps
+
+CF_EOF
+	cf_make_docs=1
+fi
+
+for cf_name in $1
+do
+cat >>$cf_output <<CF_EOF
+################################################################################
+docs-$cf_name \\
+docs :: $cf_name.html \\
+	$cf_name.pdf \\
+	$cf_name.ps \\
+	$cf_name.txt
+
+clean \\
+docs-clean ::
+	rm -f $cf_name.html $cf_name.pdf $cf_name.ps $cf_name.txt
+
+$cf_name.html : $cf_name.$2
+$cf_name.pdf : $cf_name.ps
+$cf_name.ps : $cf_name.$2
+$cf_name.txt : $cf_name.$2
+CF_EOF
+done
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_MAKE_TAGS version: 6 updated: 2010/10/23 15:52:32
@@ -927,7 +985,7 @@ $1=`echo "$2" | \
 		-e 's/-[[UD]]'"$3"'\(=[[^ 	]]*\)\?[$]//g'`
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SIZE_T version: 4 updated: 2000/01/22 00:19:54
+dnl CF_SIZE_T version: 5 updated: 2013/12/05 19:11:11
 dnl ---------
 dnl	On both Ultrix and CLIX, I find size_t defined in <stdio.h>
 AC_DEFUN([CF_SIZE_T],
@@ -946,7 +1004,7 @@ AC_CACHE_VAL(cf_cv_type_size_t,[
 		[cf_cv_type_size_t=no])
 	])
 AC_MSG_RESULT($cf_cv_type_size_t)
-test $cf_cv_type_size_t = no && AC_DEFINE(size_t, unsigned)
+test $cf_cv_type_size_t = no && AC_DEFINE(size_t, unsigned, [Define to type if size_t not declared])
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_TRY_XOPEN_SOURCE version: 1 updated: 2011/10/30 17:09:50
@@ -1185,7 +1243,7 @@ make an error
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_YACC_ERROR version: 6 updated: 2010/10/23 15:52:32
+dnl CF_YACC_ERROR version: 7 updated: 2014/01/01 10:38:58
 dnl -------------
 dnl	Test the supplied version of yacc to see which (if any) of the
 dnl	error-reporting enhancements will work.
@@ -1203,7 +1261,7 @@ cat >yacctest.y <<EOF
 #include <stdio.h>
 #include <ctype.h>
 #include "yyerror.c"
-static void yaccError(s) char *s; { ${cf_cv_main_return:-return}(0); }
+static void yaccError(const char *s) { ${cf_cv_main_return:-return}(0); }
 int yylex (void)
 { return 1; }
 %}

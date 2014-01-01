@@ -1,9 +1,9 @@
-# $Id: Makefile.in,v 4.19 2013/10/25 22:23:29 tom Exp $
+# $Id: Makefile.in,v 4.21 2014/01/01 15:57:41 tom Exp $
 #
 # UNIX template-makefile for C prototype generator
 
 THIS = cproto
-RELEASE = 4_7k
+RELEASE = 4_7l
 
 #### Start of system configuration section. ####
 
@@ -114,22 +114,19 @@ y.tab.c : grammar.y
 lex.yy.c : lex.l
 	$(LEX) $(srcdir)/lex.l
 
-$(THIS).man : $(THIS).1
-	- nroff -man $(srcdir)/$(THIS).1 >$@
+mostlyclean ::
+	- rm -f core .nfs* *$o *.bak *.BAK *.out $(JUNK) default.h
 
-mostlyclean :
-	- rm -f core .nfs* *$o *.bak *.BAK *.man *.out $(JUNK) default.h
-
-clean : mostlyclean
+clean :: mostlyclean
 	- rm -f $(PROG)
 	- cd $(srcdir)/testing && $(MAKE) $@
 
-distclean : clean
+distclean :: clean
 	- rm -f config.log config.cache config.status config.h Makefile
 	- rm -f .version .fname
 	- cd $(srcdir)/testing && $(MAKE) $@
 
-realclean: distclean
+realclean :: distclean
 	- rm -f tags
 	- cd $(srcdir)/testing && $(MAKE) $@
 

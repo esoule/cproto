@@ -1,4 +1,9 @@
--- $Id: CHANGES,v 4.39 2013/10/25 23:37:17 tom Exp $
+-- $Id: CHANGES,v 4.41 2014/01/01 15:46:55 tom Exp $
+
+2014/01/01 (4.7l)
+- add "docs" rule to makefile.
+- correct configure check for yyname vs yytname, broken by 4.7i changes
+- update config.guess
 
 2013/10/25 (4.7k)
 - modify configure script, etc., to support cross-compiles, e.g., to MinGW.
