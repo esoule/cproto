@@ -355,17 +355,12 @@ usage(void)
 
 #define CHUNK(n) (((n) | 7) + 1)
 
-/*
- * CURRENT_DIR is the first element in the array, and the system includes
- * are the last.  Other -I options are inserted in order between the two.
- */
 static void
 add_inc_dir(const char *src)
 {
     size_t have = CHUNK(num_inc_dir);
     size_t need = CHUNK(num_inc_dir + 1);
     size_t used = (need * sizeof(char *));
-    char *save;
 
     if (inc_dir == 0) {
 	inc_dir = (char **) malloc(used);
@@ -373,18 +368,7 @@ add_inc_dir(const char *src)
 	inc_dir = (char **) realloc(inc_dir, used);
     }
 
-    switch (num_inc_dir) {
-    case 0:
-	/* FALLTHRU */
-    case 1:
-	inc_dir[num_inc_dir++] = trim_path_sep(xstrdup(src));
-	break;
-    default:
-	save = inc_dir[--num_inc_dir];
-	inc_dir[num_inc_dir++] = trim_path_sep(xstrdup(src));
-	inc_dir[num_inc_dir++] = save;
-	break;
-    }
+    inc_dir[num_inc_dir++] = trim_path_sep(xstrdup(src));
 }
 
 #ifdef	vms
@@ -791,7 +775,6 @@ main(int argc, char *argv[])
 #endif
 
     add_inc_dir(CURRENT_DIR);
-    add_stdinc_dir();
 
     /* Get the program name from the 0th argument, stripping the pathname
      * for readability.
@@ -825,6 +808,8 @@ main(int argc, char *argv[])
     argv[0] = progname;		/* do this so getopt is consistent with us */
 
     process_options(&argc, &argv);
+
+    add_stdinc_dir();
 
 #if OPT_LINTLIBRARY
     if (lintLibrary()) {
