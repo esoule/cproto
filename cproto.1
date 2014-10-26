@@ -311,6 +311,13 @@ This option is passed through to the preprocessor and is used to specify
 a directory to search for files that are referenced with 
 .I #include.
 .TP
+.BI \-n
+Do not search the standard system directories for header files.  Only
+the directories specified with -I options (and the directory
+of the current file, if appropriate) are searched (similar to
+.B \-nostdinc
+option)
+.TP
 .BI \-E " cpp"
 Pipe the input files through the specified C preprocessor command
 when generating prototypes.

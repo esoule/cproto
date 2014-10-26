@@ -50,6 +50,9 @@ boolean types_out = FALSE;
 boolean lint_shadowed = FALSE;
 #endif
 
+/* If TRUE, search the standard system directories for header files */
+boolean use_stdinc_dirs = TRUE;
+
 /* If TRUE, generate variable declarations */
 boolean variables_out = FALSE;
 
@@ -347,6 +350,7 @@ usage(void)
     fputs("  -D name[=value]  Define C preprocessor symbol\n", stderr);
     fputs("  -U name          Undefine C preprocessor symbol\n", stderr);
     fputs("  -I directory     Add #include search directory\n", stderr);
+    fputs("  -n               Do not search the standard system directories for header files\n", stderr);
     fputs("  -E command       Run specified C preprocessor command\n", stderr);
     fputs("  -E 0             Do not run any C preprocessor\n", stderr);
     fputs("  -V               Print version information\n", stderr);
@@ -481,6 +485,7 @@ f:\
 i\
 l\
 m\
+n\
 o:\
 p\
 q\
@@ -570,7 +575,15 @@ process_options(int *pargc, char ***pargv)
 #endif
 #endif
 	    break;
-
+	case 'n':
+	    use_stdinc_dirs = FALSE;
+#ifdef CPP
+	    tmp = (char *) xmalloc(quote_length("-nostdinc") + 10);
+	    sprintf(tmp, " %s", "-nostdinc");
+	    strcat(cpp_opt, quote_string(tmp));
+	    free(tmp);
+#endif
+	    break;
 	case 'a':
 	    func_style = FUNC_ANSI;
 	    break;
@@ -809,7 +822,9 @@ main(int argc, char *argv[])
 
     process_options(&argc, &argv);
 
-    add_stdinc_dir();
+    if (use_stdinc_dirs) {
+      add_stdinc_dir();
+    }
 
 #if OPT_LINTLIBRARY
     if (lintLibrary()) {
@@ -903,6 +918,7 @@ main(int argc, char *argv[])
 		sprintf(cpp_cmd, "%s%s %s", cpp, cpp_opt, FileName);
 		if (quiet)
 		    strcat(cpp_cmd, " 2>/dev/null");
+
 		inf = popen(cpp_cmd, "r");
 #endif
 		if (inf == NULL || ferror(inf) || feof(inf)) {
