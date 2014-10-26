@@ -1,4 +1,4 @@
-cproto (4.7l) unstable; urgency=low
+cproto (4.7l.1.1) unstable; urgency=low
 
   * correct configure-check for yyname vs yytname
 

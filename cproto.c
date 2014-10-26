@@ -2,7 +2,7 @@
  *
  * C function prototype generator and function definition converter
  */
-#define VERSION "4.7l"
+#define VERSION "4.7l.1.1"
 
 #include <cproto.h>
 

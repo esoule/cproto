@@ -3,7 +3,7 @@
 # UNIX template-makefile for C prototype generator
 
 THIS = cproto
-RELEASE = 4_7l
+RELEASE = 4_7l_1_1
 
 #### Start of system configuration section. ####
 
