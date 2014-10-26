@@ -764,6 +764,18 @@ process_options(int *pargc, char ***pargv)
     *pargv = argv;
 }
 
+static void add_stdinc_dir(void)
+{
+#if defined(MSDOS) && defined(__TURBOC__)
+    add_inc_dir("/tc/include");
+#elif defined(vms)
+    add_inc_dir("sys$library:");
+#else
+    add_inc_dir("/usr/include");
+#endif
+    return;
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -779,13 +791,7 @@ main(int argc, char *argv[])
 #endif
 
     add_inc_dir(CURRENT_DIR);
-#if defined(MSDOS) && defined(__TURBOC__)
-    add_inc_dir("/tc/include");
-#elif defined(vms)
-    add_inc_dir("sys$library:");
-#else
-    add_inc_dir("/usr/include");
-#endif
+    add_stdinc_dir();
 
     /* Get the program name from the 0th argument, stripping the pathname
      * for readability.
